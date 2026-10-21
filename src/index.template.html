@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Maths Magic</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,13 +12,15 @@
   <header class="top">
     <div class="brand">
       <h1>Maths Magic</h1>
-      <p class="sub">Prototype 0.5 · The treehouse bedroom</p>
+      <p class="sub">Prototype 0.6 · <span id="roomName"></span></p>
     </div>
     <div class="meter" aria-live="polite">
       <div class="meter-row"><span class="stage-name" id="stageName">Cold and grey</span><span class="count" id="count"></span></div>
       <div class="bar"><i id="barFill"></i></div>
     </div>
   </header>
+
+  <nav class="rooms" id="rooms" aria-label="Choose a room"></nav>
 
   <div class="layout">
     <div class="scene-wrap">
@@ -36,7 +39,7 @@
           <p class="bubble" id="guide" aria-live="polite"></p>
         </div>
         <div class="stage" id="stage">
-          <img id="grey" alt="A cosy treehouse bedroom inside a huge tree, currently grey and cold" src="__IMG__">
+          <img id="grey" alt="">>
           <canvas id="colour" width="1408" height="768"></canvas>
           <canvas id="fx" width="1408" height="768"></canvas>
           <div class="overlay" id="overlay"></div>

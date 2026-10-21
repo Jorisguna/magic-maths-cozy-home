@@ -291,3 +291,8 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
   .pip, .pip.on, .pip.next, .pip.pop, .pip.pop::after, .pip.on .shine, .chain.allpulse .pip { animation: none; }
   .pip .well, .chain::after { transition: none; }
 }
+.rooms { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; }
+.room-btn { display: flex; flex-direction: column; align-items: flex-start; min-height: 48px; padding: 6px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel-2); color: inherit; font: inherit; cursor: pointer; }
+.room-btn span { font-family: 'Fondamento', serif; font-size: 1.05rem; }
+.room-btn small { color: var(--muted); font-size: 0.78rem; }
+.room-btn.on { border-color: #e8c66a; box-shadow: 0 0 0 1px #e8c66a inset; cursor: default; }

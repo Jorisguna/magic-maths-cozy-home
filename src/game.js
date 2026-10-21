@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  var HOTSPOTS = __HOTSPOTS__;
+  var ROOMS = __ROOMS__;
   var W = 1408, H = 768;
   var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var $ = function (id) { return document.getElementById(id); };
@@ -10,7 +10,13 @@
     set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   };
 
-  var restored = new Set(store.get('mm_restored', []));
+  var roomId = store.get('mm_room', ROOMS[0].id);
+  var ROOM = ROOMS.filter(function (r) { return r.id === roomId; })[0] || ROOMS[0];
+  var HOTSPOTS = ROOM.hotspots;
+  // the first room keeps its original key so earlier progress is not lost
+  function progressKey(id) { return id === ROOMS[0].id ? 'mm_restored' : 'mm_restored_' + id; }
+  var RESTORED_KEY = progressKey(ROOM.id);
+  var restored = new Set(store.get(RESTORED_KEY, []));
   var tables = store.get('mm_tables', [2, 5, 10]);
   var stats = store.get('mm_stats', {});
   var review = [];
@@ -22,7 +28,7 @@
     { name: 'First flicker', msg: 'The room is starting to wake up.' },
     { name: 'Warming up', msg: 'It already feels warmer in here.' },
     { name: 'Nearly home', msg: 'Almost there. Only a few places are left.' },
-    { name: 'Alive', msg: 'The whole treehouse is alive!' }
+    { name: 'Alive', msg: 'The whole room is alive!' }
   ];
   var GROUPS = [
     ['spark', 'Sparks', '1 sum'],
@@ -496,7 +502,7 @@
   function idleGuide() {
     var n = restored.size;
     if (n === 0) say('Hello, I’m Pip! Everything has gone grey and cold. Pick a spell and cast it with your maths to bring it back to life.');
-    else if (n >= HOTSPOTS.length) say('The whole treehouse is alive again. Thank you!');
+    else if (n >= HOTSPOTS.length) say('The whole room is alive again. Thank you!');
     else say('What shall we wake up next?');
   }
 
@@ -685,7 +691,7 @@
     if (cast.finished) return;
     cast.finished = true;
     var before = stageIndex(restored.size);
-    restored.add(h.id); store.set('mm_restored', Array.from(restored));
+    restored.add(h.id); store.set(RESTORED_KEY, Array.from(restored));
     var after = stageIndex(restored.size);
     reveal(h, 0);
     updateMeter();
@@ -774,7 +780,7 @@
     HOTSPOTS.forEach(function (h) {
       if (!restored.has(h.id)) { restored.add(h.id); reveal(h, i * 140, 8); i++; }
     });
-    store.set('mm_restored', Array.from(restored));
+    store.set(RESTORED_KEY, Array.from(restored));
     updateMeter(); idleGuide(); showIdle();
   });
   var resetArmed = false, resetTimer = 0;
@@ -786,15 +792,37 @@
       return;
     }
     clearTimeout(resetTimer); resetArmed = false; b.textContent = 'Reset the room';
-    restored.clear(); store.set('mm_restored', []);
+    restored.clear(); store.set(RESTORED_KEY, []);
     anims = []; particles = [];
     HOTSPOTS.forEach(function (h) { prog[h.id] = 0; });
     render(); drawFx(); updateMeter(); idleGuide(); showIdle();
   });
 
   /* ---------- Start ---------- */
+  function buildRoomPicker() {
+    var box = $('rooms');
+    if (ROOMS.length < 2) { box.hidden = true; return; }
+    ROOMS.forEach(function (r) {
+      var done = new Set(store.get(progressKey(r.id), [])).size;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'room-btn';
+      if (r.id === ROOM.id) { b.classList.add('on'); b.setAttribute('aria-current', 'true'); }
+      b.innerHTML = '<span></span><small></small>';
+      b.firstChild.textContent = r.title;
+      b.lastChild.textContent = done + ' of ' + r.hotspots.length;
+      b.addEventListener('click', function () {
+        if (r.id === ROOM.id) return;
+        store.set('mm_room', r.id); location.reload();
+      });
+      box.appendChild(b);
+    });
+  }
+
   function boot() {
     sfxInit();
+    grey.alt = ROOM.alt; grey.src = ROOM.img;
+    $('roomName').textContent = ROOM.title;
+    buildRoomPicker();
     colourImg.onload = function () { ready = true; render(); };
     colourImg.src = grey.src;
     buildKeypad(); renderChips(); updateMeter(); idleGuide(); showIdle();
