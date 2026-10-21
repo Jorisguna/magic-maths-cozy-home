@@ -702,9 +702,12 @@
     var nx = nextSuggestion();
     if (nx) {
       var b1 = document.createElement('button'); b1.type = 'button'; b1.className = 'btn primary';
-      b1.textContent = 'Next: ' + nx.name;
+      b1.textContent = 'Next: ' + nx.name + ' \u2192';
       b1.addEventListener('click', function () { startSpell(nx.id); });
       box.appendChild(b1);
+      // load the next spell on its own once the colour has begun to spread; tapping a spot or "Choose a spell" cancels this
+      var tk = cast;
+      setTimeout(function () { if (cast === tk) startSpell(nx.id); }, reduce ? 1200 : 2600);
     }
     var b2 = document.createElement('button'); b2.type = 'button'; b2.className = 'btn';
     b2.textContent = nx ? 'Choose a spell' : 'Back to the room';
