@@ -1,0 +1,369 @@
+[
+ {
+  "id": "lights",
+  "name": "Fairy lights",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    835,
+    125,
+    185,
+    48
+   ]
+  ],
+  "line": "The fairy lights twinkle on, one by one."
+ },
+ {
+  "id": "lantern-l",
+  "name": "Hanging lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    607,
+    172,
+    55,
+    72
+   ]
+  ],
+  "line": "The lantern lights up warm and gold."
+ },
+ {
+  "id": "lantern-r",
+  "name": "Window lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    992,
+    232,
+    55,
+    78
+   ]
+  ],
+  "line": "A second lantern glows beside the curtain."
+ },
+ {
+  "id": "crystal-p",
+  "name": "Purple crystal",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    552,
+    312,
+    48,
+    48
+   ]
+  ],
+  "line": "The purple crystal hums softly."
+ },
+ {
+  "id": "crystal-g",
+  "name": "Green crystal",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    1090,
+    240,
+    58,
+    58
+   ]
+  ],
+  "line": "The green crystal sparkles."
+ },
+ {
+  "id": "flowers",
+  "name": "Jar of flowers",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    1050,
+    568,
+    55,
+    75
+   ]
+  ],
+  "line": "The flowers in the jar burst into colour."
+ },
+ {
+  "id": "lantern-f",
+  "name": "Floor lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    492,
+    630,
+    48,
+    62
+   ]
+  ],
+  "line": "The little floor lantern flickers awake."
+ },
+ {
+  "id": "globe",
+  "name": "Little globe",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    522,
+    418,
+    50,
+    50
+   ],
+   [
+    778,
+    668,
+    44,
+    52
+   ]
+  ],
+  "line": "Both globes spin and shimmer."
+ },
+ {
+  "id": "quilt",
+  "name": "Patchwork quilt",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    800,
+    440,
+    210,
+    105
+   ]
+  ],
+  "line": "The patchwork quilt unfolds in every colour."
+ },
+ {
+  "id": "potions",
+  "name": "Potion shelves",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    455,
+    300,
+    150,
+    95
+   ],
+   [
+    385,
+    380,
+    100,
+    62
+   ]
+  ],
+  "line": "The potion bottles bubble and fizz."
+ },
+ {
+  "id": "chair",
+  "name": "Armchair and books",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    445,
+    530,
+    100,
+    92
+   ],
+   [
+    425,
+    625,
+    70,
+    45
+   ]
+  ],
+  "line": "The armchair is soft and ready for reading."
+ },
+ {
+  "id": "dried",
+  "name": "Dried flowers",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    850,
+    190,
+    200,
+    80
+   ]
+  ],
+  "line": "The hanging flowers and feathers sway."
+ },
+ {
+  "id": "shelf-r",
+  "name": "Bookshelf",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    1110,
+    300,
+    100,
+    92
+   ]
+  ],
+  "line": "Every book on the shelf turns its page."
+ },
+ {
+  "id": "rug",
+  "name": "Round rug",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    735,
+    630,
+    125,
+    50
+   ]
+  ],
+  "line": "The woven rug glows under your feet."
+ },
+ {
+  "id": "desk",
+  "name": "Writing desk",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    935,
+    615,
+    125,
+    55
+   ]
+  ],
+  "line": "The quill dips itself into the ink."
+ },
+ {
+  "id": "curtain",
+  "name": "Purple curtain",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    950,
+    310,
+    62,
+    155
+   ]
+  ],
+  "line": "The curtain ripples in a magic breeze."
+ },
+ {
+  "id": "vines",
+  "name": "Glowing vines",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    305,
+    330,
+    65,
+    190
+   ],
+   [
+    1235,
+    250,
+    60,
+    160
+   ]
+  ],
+  "line": "The vines climb and blossom."
+ },
+ {
+  "id": "cat",
+  "name": "Sleeping cat",
+  "kind": "incantation",
+  "sums": 4,
+  "shapes": [
+   [
+    570,
+    616,
+    60,
+    42
+   ]
+  ],
+  "line": "The cat stretches, yawns and purrs."
+ },
+ {
+  "id": "fireplace",
+  "name": "The fireplace",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    1110,
+    520,
+    85,
+    90
+   ],
+   [
+    1105,
+    440,
+    100,
+    50
+   ]
+  ],
+  "line": "Fire roars in the hearth. The room is warm again."
+ },
+ {
+  "id": "window",
+  "name": "Stained-glass window",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    656,
+    282,
+    62,
+    66
+   ]
+  ],
+  "line": "The window floods the room with coloured light."
+ },
+ {
+  "id": "forest",
+  "name": "The forest outside",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    85,
+    300,
+    120,
+    300
+   ],
+   [
+    1335,
+    300,
+    100,
+    280
+   ]
+  ],
+  "line": "The whole forest wakes up and shines."
+ },
+ {
+  "id": "tree",
+  "name": "The Great Tree",
+  "kind": "finale",
+  "sums": 8,
+  "full": true,
+  "shapes": [
+   [
+    704,
+    384,
+    0,
+    0
+   ]
+  ],
+  "line": "The Great Tree is alive again. You brought the home back with maths."
+ }
+]

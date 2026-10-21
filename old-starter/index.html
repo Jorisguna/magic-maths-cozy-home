@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magic Maths Cozy Home</title>
+<style>
+  :root {
+    --bg: #fdf3e3; --card: #fffaf0; --ink: #4a3b32; --accent: #e08a5b;
+    --good: #7bb274; --bad: #d96c6c; --wall: #f5d9b8; --floor: #c8946a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Trebuchet MS", sans-serif; background: var(--bg); color: var(--ink); }
+  header { text-align: center; padding: 16px 16px 4px; }
+  h1 { margin: 0; font-size: 1.6rem; }
+  main { max-width: 760px; margin: 0 auto; padding: 12px 16px 32px; display: grid; gap: 16px; }
+  .card { background: var(--card); border-radius: 16px; padding: 16px; box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+  .stats { display: flex; justify-content: space-between; font-weight: bold; }
+  #question { font-size: 2.2rem; text-align: center; margin: 12px 0; }
+  .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  button { font: inherit; font-size: 1.4rem; padding: 14px; border: 0; border-radius: 12px;
+           background: var(--accent); color: #fff; cursor: pointer; }
+  button:hover { filter: brightness(1.08); }
+  button.good { background: var(--good); } button.bad { background: var(--bad); }
+  button:disabled { opacity: .5; cursor: default; }
+  #msg { text-align: center; min-height: 1.5em; font-weight: bold; }
+  #room { position: relative; height: 240px; border-radius: 16px; overflow: hidden; background: var(--wall); }
+  #room::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: var(--floor); }
+  .item { position: absolute; font-size: 3rem; z-index: 1; }
+  .shop { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .shop button { font-size: 1rem; background: #b98a6a; }
+  select { font: inherit; padding: 6px; border-radius: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>✨ Magic Maths Cozy Home ✨</h1>
+  <p>Solve maths puzzles to earn magic coins, then decorate your cosy home!</p>
+</header>
+<main>
+  <section class="card">
+    <div class="stats">
+      <span>🪙 Coins: <span id="coins">0</span></span>
+      <span>🔥 Streak: <span id="streak">0</span></span>
+      <label>Level
+        <select id="level">
+          <option value="1">Easy (+ and −)</option>
+          <option value="2" selected>Medium (× tables)</option>
+          <option value="3">Hard (× and ÷)</option>
+        </select>
+      </label>
+    </div>
+    <div id="question"></div>
+    <div class="answers" id="answers"></div>
+    <div id="msg"></div>
+  </section>
+
+  <section class="card">
+    <h2>🛋️ Shop</h2>
+    <div class="shop" id="shop"></div>
+  </section>
+
+  <section class="card">
+    <h2>🏡 Your home</h2>
+    <div id="room"></div>
+  </section>
+</main>
+
+<script>
+// ---- Shop items: add more here! ----
+const ITEMS = [
+  { emoji: "🪴", name: "Plant",     cost: 5,  x: 8,  y: 120 },
+  { emoji: "🛋️", name: "Sofa",      cost: 15, x: 30, y: 135 },
+  { emoji: "🖼️", name: "Picture",   cost: 10, x: 45, y: 20  },
+  { emoji: "🕯️", name: "Candle",    cost: 8,  x: 70, y: 120 },
+  { emoji: "🐈", name: "Cat",       cost: 25, x: 55, y: 150 },
+  { emoji: "🪟", name: "Window",    cost: 12, x: 15, y: 20  },
+  { emoji: "📚", name: "Bookshelf", cost: 18, x: 82, y: 100 },
+  { emoji: "🔥", name: "Fireplace", cost: 30, x: 65, y: 70  },
+];
+
+// ---- Saved game ----
+let state = { coins: 0, streak: 0, owned: [] };
+try { Object.assign(state, JSON.parse(localStorage.getItem("mmch") || "{}")); } catch (e) {}
+const save = () => { try { localStorage.setItem("mmch", JSON.stringify(state)); } catch (e) {} };
+
+const $ = id => document.getElementById(id);
+const rnd = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+
+// ---- Question generator ----
+function makeQuestion(level) {
+  let text, answer;
+  if (level === 1) {
+    const a = rnd(5, 50), b = rnd(2, 40);
+    if (Math.random() < .5) { text = `${a} + ${b}`; answer = a + b; }
+    else { const big = Math.max(a, b), small = Math.min(a, b); text = `${big} − ${small}`; answer = big - small; }
+  } else if (level === 2) {
+    const a = rnd(2, 12), b = rnd(2, 12); text = `${a} × ${b}`; answer = a * b;
+  } else {
+    if (Math.random() < .5) { const a = rnd(6, 15), b = rnd(6, 15); text = `${a} × ${b}`; answer = a * b; }
+    else { const b = rnd(2, 12), answerVal = rnd(2, 12); text = `${b * answerVal} ÷ ${b}`; answer = answerVal; }
+  }
+  const options = new Set([answer]);
+  while (options.size < 4) {
+    const wrong = answer + rnd(-10, 10);
+    if (wrong > 0 && wrong !== answer) options.add(wrong);
+  }
+  return { text, answer, options: [...options].sort(() => Math.random() - .5) };
+}
+
+let current;
+function nextQuestion() {
+  current = makeQuestion(+$("level").value);
+  $("question").textContent = current.text + " = ?";
+  $("answers").innerHTML = "";
+  current.options.forEach(o => {
+    const b = document.createElement("button");
+    b.textContent = o;
+    b.onclick = () => answer(o, b);
+    $("answers").appendChild(b);
+  });
+}
+
+function answer(value, btn) {
+  document.querySelectorAll("#answers button").forEach(b => b.disabled = true);
+  if (value === current.answer) {
+    btn.classList.add("good");
+    const bonus = state.streak >= 4 ? 2 : 1;
+    state.coins += bonus; state.streak++;
+    $("msg").textContent = bonus > 1 ? "✨ Magic! Streak bonus: +2 coins" : "✨ Correct! +1 coin";
+  } else {
+    btn.classList.add("bad");
+    state.streak = 0;
+    $("msg").textContent = `Not quite — the answer was ${current.answer}. Try the next one!`;
+  }
+  save(); render();
+  setTimeout(() => { $("msg").textContent = ""; nextQuestion(); }, 1400);
+}
+
+// ---- Shop & room ----
+function render() {
+  $("coins").textContent = state.coins;
+  $("streak").textContent = state.streak;
+  $("shop").innerHTML = "";
+  ITEMS.forEach((it, i) => {
+    const b = document.createElement("button");
+    const owned = state.owned.includes(i);
+    b.textContent = owned ? `${it.emoji} ${it.name} ✓` : `${it.emoji} ${it.name} — 🪙${it.cost}`;
+    b.disabled = owned || state.coins < it.cost;
+    b.onclick = () => { state.coins -= it.cost; state.owned.push(i); save(); render(); };
+    $("shop").appendChild(b);
+  });
+  $("room").innerHTML = "";
+  state.owned.forEach(i => {
+    const s = document.createElement("span");
+    s.className = "item"; s.textContent = ITEMS[i].emoji;
+    s.style.left = ITEMS[i].x + "%"; s.style.top = ITEMS[i].y + "px";
+    $("room").appendChild(s);
+  });
+}
+
+$("level").onchange = nextQuestion;
+render(); nextQuestion();
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<title>Maths Magic</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fondamento&family=Nunito:wght@500;700;800&display=swap">
+<style>
+/*__STYLES__*/
+</style>
+
+<main class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>Maths Magic</h1>
+      <p class="sub">Prototype 0.5 · The treehouse bedroom</p>
+    </div>
+    <div class="meter" aria-live="polite">
+      <div class="meter-row"><span class="stage-name" id="stageName">Cold and grey</span><span class="count" id="count"></span></div>
+      <div class="bar"><i id="barFill"></i></div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="scene-wrap">
+      <section class="scene">
+        <div class="guide-bar">
+          <svg class="pip-fairy" viewBox="0 0 48 48" aria-hidden="true">
+            <g fill="rgba(160,255,235,0.5)" stroke="rgba(210,255,246,0.9)" stroke-width="1">
+              <ellipse cx="13" cy="17" rx="11" ry="6.5" transform="rotate(-28 13 17)"/>
+              <ellipse cx="35" cy="17" rx="11" ry="6.5" transform="rotate(28 35 17)"/>
+              <ellipse cx="15" cy="30" rx="8" ry="4.8" transform="rotate(28 15 30)"/>
+              <ellipse cx="33" cy="30" rx="8" ry="4.8" transform="rotate(-28 33 30)"/>
+            </g>
+            <circle cx="24" cy="25" r="11" fill="rgba(255,236,160,0.35)"/>
+            <circle cx="24" cy="25" r="6.5" fill="#fff6c8"/>
+          </svg>
+          <p class="bubble" id="guide" aria-live="polite"></p>
+        </div>
+        <div class="stage" id="stage">
+          <img id="grey" alt="A cosy treehouse bedroom inside a huge tree, currently grey and cold" src="__IMG__">
+          <canvas id="colour" width="1408" height="768"></canvas>
+          <canvas id="fx" width="1408" height="768"></canvas>
+          <div class="overlay" id="overlay"></div>
+        </div>
+        <p class="caption">Tap a glowing light in the room, or pick a spell from the spellbook.</p>
+      </section>
+    </div>
+
+    <aside class="panel" id="panel">
+      <div id="viewIdle">
+        <h2 class="book-title">Spellbook</h2>
+        <p class="label">Tables to practise</p>
+        <div class="chips" id="chips" role="group" aria-label="Times tables to practise"></div>
+        <div class="spells" id="spells"></div>
+      </div>
+
+      <div id="viewCast" hidden>
+        <button class="back" id="backBtn" data-nav="1" type="button">&larr; Spells</button>
+        <h2 class="cast-title" id="castName"></h2>
+        <div class="pips" id="pips" role="img" aria-label="Sums cast so far"><div class="chain" id="chain"></div></div>
+        <div id="castBody">
+          <div class="q" id="q"><span id="qText"></span> = <span class="ans" id="ans">?</span></div>
+          <div class="keypad" id="keypad"></div>
+        </div>
+        <div class="done-card" id="doneCard" hidden>
+          <p class="cast-title">Spell cast!</p>
+          <div class="row" id="doneBtns"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <details class="tools">
+    <summary>Prototype tools</summary>
+    <div class="row">
+      <button id="hintBtn" type="button">Show the answer</button>
+      <button id="allBtn" type="button">Preview the finished room</button>
+      <button id="resetBtn" type="button">Reset the room</button>
+    </div>
+  </details>
+</main>
+
+<script>
+/*__SCRIPT__*/
+</script>
