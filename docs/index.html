@@ -989,7 +989,7 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
     for (var i = 0; i < ks.length; i++) ks[i].disabled = !on;
   }
 
-  function startSpell(id) {
+  function startSpell(id, keepGuide) {
     var h = byId(id);
     if (!h || restored.has(id) || lockLeft(h) > 0) return;
     cast = { h: h, done: 0, input: '', busy: false, gap: 1, lastKey: '', finished: false, completing: false, q: null };
@@ -998,7 +998,7 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
     $('viewIdle').hidden = true; $('viewCast').hidden = false;
     $('castName').textContent = h.name;
     $('castBody').hidden = false; $('doneCard').hidden = true;
-    say(h.sums === 1 ? 'Just one sum. You can do it!' : h.sums + ' sums to cast this spell.');
+    if (!keepGuide) say(h.sums === 1 ? 'Just one sum. You can do it!' : h.sums + ' sums to cast this spell.');
     renderPips(); renderOverlay(); showQuestion();
     if (window.matchMedia && window.matchMedia('(max-width: 900px)').matches) {
       $('panel').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
@@ -1079,21 +1079,19 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
     reveal(h, 0);
     updateMeter();
     if (quiet) return;
-    $('castBody').hidden = true; $('doneCard').hidden = false;
-    say(h.line + (after !== before ? ' ' + STAGES[after].msg : ''));
-    var box = $('doneBtns'); box.textContent = '';
     var nx = nextSuggestion();
+    say(h.line + (after !== before ? ' ' + STAGES[after].msg : ''));
     if (nx) {
-      var b1 = document.createElement('button'); b1.type = 'button'; b1.className = 'btn primary';
-      b1.textContent = 'Next: ' + nx.name + ' \u2192';
-      b1.addEventListener('click', function () { startSpell(nx.id); });
-      box.appendChild(b1);
-      // load the next spell on its own once the colour has begun to spread; tapping a spot or "Choose a spell" cancels this
+      // go straight to the next spell's first sum, so the panel never flashes the done card or the spell list
       var tk = cast;
-      setTimeout(function () { if (cast === tk) startSpell(nx.id); }, reduce ? 1200 : 2600);
+      setTimeout(function () { if (cast === tk) startSpell(nx.id, true); }, reduce ? 400 : 700);
+      renderOverlay();
+      return;
     }
+    $('castBody').hidden = true; $('doneCard').hidden = false;
+    var box = $('doneBtns'); box.textContent = '';
     var b2 = document.createElement('button'); b2.type = 'button'; b2.className = 'btn';
-    b2.textContent = nx ? 'Choose a spell' : 'Back to the room';
+    b2.textContent = 'Back to the room';
     b2.addEventListener('click', function () { idleGuide(); showIdle(); });
     box.appendChild(b2);
     renderOverlay();
