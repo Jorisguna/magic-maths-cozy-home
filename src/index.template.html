@@ -66,21 +66,19 @@
           <canvas id="fx" width="1408" height="768"></canvas>
           <div class="overlay" id="overlay"></div>
         </div>
-        <p class="caption">Tap a glowing light in the room, or pick a spell from the spellbook.</p>
+        <p class="caption">Tap a glowing light in the room.</p>
       </section>
     </div>
 
     <aside class="panel" id="panel">
       <div id="viewIdle">
-        <h2 class="book-title">Spellbook</h2>
-        <p class="label">Tables to practise</p>
-        <div class="chips" id="chips" role="group" aria-label="Times tables to practise"></div>
-        <div class="spells" id="spells"></div>
+        <p class="idle-note">Tap a glowing light in the room to cast its spell.</p>
       </div>
 
       <div id="viewCast" hidden>
-        <button class="back" id="backBtn" data-nav="1" type="button">&larr; Spells</button>
+        <button class="back" id="backBtn" data-nav="1" type="button">&larr; Back to the room</button>
         <h2 class="cast-title" id="castName"></h2>
+        <p class="cast-type" id="castType"></p>
         <div class="pips" id="pips" role="img" aria-label="Sums cast so far"><div class="chain" id="chain"></div></div>
         <div id="castBody">
           <div class="q" id="q"><span id="qText"></span> = <span class="ans" id="ans">?</span></div>
@@ -96,6 +94,10 @@
 
   <details class="tools">
     <summary>Prototype tools</summary>
+    <h3 class="tools-h">Tables to practise</h3>
+    <div class="chips" id="chips" role="group" aria-label="Times tables to practise"></div>
+    <h3 class="tools-h">Spellbook</h3>
+    <div class="spells" id="spells"></div>
     <div class="dims">
       <label>Other fairies while casting <input type="range" id="dim-other" min="0" max="100" step="5"><output id="dimv-other"></output></label>
       <label>Fairy being cast <input type="range" id="dim-current" min="0" max="100" step="5"><output id="dimv-current"></output></label>

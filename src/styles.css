@@ -334,3 +334,9 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
 @media (prefers-reduced-motion: reduce) { .node.open::before { animation: none; } }
 .map-back { align-self: flex-start; background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; min-height: 44px; padding: 6px 16px; font-family: var(--font-display); margin-bottom: 14px; }
 .map-back:hover { border-color: #e8c66a; }
+
+.idle-note { margin: 0; padding: 24px 8px; text-align: center; font-family: var(--font-display); font-size: 1.15rem; color: var(--brown-soft); }
+.cast-type { margin: -4px 0 12px; text-align: center; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #a8741a; }
+.cast-type.incantation { color: #1f7f6d; }
+.cast-type.ritual, .cast-type.finale { color: #7a45ad; }
+.tools-h { margin: 14px 0 6px; font-size: 0.9rem; font-weight: 800; }

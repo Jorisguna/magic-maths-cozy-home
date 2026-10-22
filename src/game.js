@@ -660,6 +660,9 @@
     document.body.classList.add('casting');
     $('viewIdle').hidden = true; $('viewCast').hidden = false;
     $('castName').textContent = h.name;
+    var g = GROUPS.filter(function (x) { return x[0] === h.kind; })[0];
+    $('castType').textContent = g ? (h.kind === 'finale' ? 'Finale' : g[1].replace(/s$/, '')) : '';
+    $('castType').className = 'cast-type ' + h.kind;
     $('castBody').hidden = false; $('doneCard').hidden = true;
     if (!keepGuide) say(h.sums === 1 ? 'Just one sum. You can do it!' : h.sums + ' sums to cast this spell.');
     renderPips(); renderOverlay(); showQuestion();
