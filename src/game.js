@@ -633,6 +633,18 @@
     var an = $('ans'); an.textContent = '?'; an.className = 'ans';
     $('q').classList.remove('fizz');
     cast.busy = false; setKeys(true);
+    autoSolve();
+  }
+  /* Testing aid: when on, every question answers itself so a whole spell can be run through quickly */
+  var autoOn = false;
+  function autoSolve() {
+    if (!autoOn || !cast) return;
+    var tk = cast, q = cast.q;
+    setTimeout(function () {
+      if (!autoOn || cast !== tk || tk.q !== q || tk.busy || tk.finished) return;
+      setAnswerInstant(String(q.ans));
+      submit();
+    }, 350);
   }
   function setKeys(on) {
     var ks = document.querySelectorAll('#keypad .key');
@@ -816,6 +828,12 @@
   $('hintBtn').addEventListener('click', function () {
     if (!cast || cast.busy || cast.finished) return;
     setAnswerInstant(String(cast.q.ans));
+  });
+  $('autoBtn').addEventListener('click', function () {
+    autoOn = !autoOn;
+    this.textContent = 'Auto-answer: ' + (autoOn ? 'on' : 'off');
+    this.setAttribute('aria-pressed', autoOn);
+    if (autoOn && cast && !cast.busy && !cast.finished) autoSolve();
   });
   $('allBtn').addEventListener('click', function () {
     var i = 0;
