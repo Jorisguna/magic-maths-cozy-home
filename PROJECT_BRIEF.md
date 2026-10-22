@@ -111,3 +111,4 @@ Whole completion from last answer to the room waking is about 2.4 seconds. This 
 - 0.9 Bathroom added as room 4 (opens after the Kitchen).
 - 1.0 Potion Workshop added as room 5 (opens after the Bathroom). Five rooms in all.
 - 1.1 Acorn Nursery added as room 6 (opens after the Potion Workshop).
+- 1.2 Observatory added as room 7 (opens after the Acorn Nursery). Seven rooms in all.

@@ -1,0 +1,453 @@
+[
+ {
+  "id": "lantern-c",
+  "name": "Great lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    704,
+    135,
+    35,
+    52
+   ]
+  ],
+  "line": "The great lantern glows warm and gold."
+ },
+ {
+  "id": "lantern-l",
+  "name": "Left lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    200,
+    245,
+    31,
+    45
+   ]
+  ],
+  "line": "A lantern lights the branch outside."
+ },
+ {
+  "id": "lantern-r",
+  "name": "Right lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    1209,
+    298,
+    35,
+    52
+   ]
+  ],
+  "line": "A lantern lights the path outside."
+ },
+ {
+  "id": "lantern-low",
+  "name": "Lower lanterns",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    309,
+    695,
+    33,
+    48
+   ],
+   [
+    1110,
+    698,
+    33,
+    48
+   ]
+  ],
+  "line": "The little lanterns flicker awake."
+ },
+ {
+  "id": "clock",
+  "name": "Brass clock",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    712,
+    405,
+    29,
+    38
+   ]
+  ],
+  "line": "The clock ticks softly."
+ },
+ {
+  "id": "moon",
+  "name": "The full moon",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    781,
+    153,
+    51,
+    50
+   ]
+  ],
+  "line": "The moon glows silver and bright."
+ },
+ {
+  "id": "moths",
+  "name": "Little moths",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    368,
+    238,
+    37,
+    28
+   ],
+   [
+    558,
+    55,
+    29,
+    22
+   ],
+   [
+    827,
+    50,
+    23,
+    20
+   ],
+   [
+    1192,
+    170,
+    23,
+    28
+   ]
+  ],
+  "line": "The moths flutter into the light."
+ },
+ {
+  "id": "big-star",
+  "name": "Big star",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    489,
+    105,
+    35,
+    38
+   ]
+  ],
+  "line": "The big star twinkles."
+ },
+ {
+  "id": "luna-moth",
+  "name": "Luna moth",
+  "kind": "incantation",
+  "sums": 4,
+  "shapes": [
+   [
+    1036,
+    230,
+    53,
+    55
+   ]
+  ],
+  "line": "The luna moth spreads her green wings."
+ },
+ {
+  "id": "telescope",
+  "name": "Brass telescope",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    839,
+    405,
+    82,
+    70
+   ]
+  ],
+  "line": "The telescope shines, ready to look at the stars."
+ },
+ {
+  "id": "charts-l",
+  "name": "Left star charts",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    463,
+    338,
+    77,
+    68
+   ],
+   [
+    575,
+    395,
+    41,
+    38
+   ],
+   [
+    649,
+    437,
+    29,
+    36
+   ]
+  ],
+  "line": "The star charts glow with golden lines."
+ },
+ {
+  "id": "charts-r",
+  "name": "Right star charts",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    769,
+    428,
+    33,
+    34
+   ],
+   [
+    911,
+    370,
+    39,
+    38
+   ],
+   [
+    987,
+    320,
+    39,
+    55
+   ]
+  ],
+  "line": "The constellations shine on the paper."
+ },
+ {
+  "id": "stars-l",
+  "name": "Left hanging stars",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    307,
+    100,
+    23,
+    32
+   ],
+   [
+    422,
+    122,
+    27,
+    32
+   ],
+   [
+    420,
+    188,
+    31,
+    32
+   ],
+   [
+    454,
+    238,
+    23,
+    28
+   ],
+   [
+    489,
+    268,
+    20,
+    22
+   ]
+  ],
+  "line": "The paper stars twirl and sparkle."
+ },
+ {
+  "id": "stars-r",
+  "name": "Right hanging stars",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    941,
+    40,
+    25,
+    32
+   ],
+   [
+    967,
+    142,
+    29,
+    34
+   ],
+   [
+    941,
+    240,
+    25,
+    28
+   ],
+   [
+    906,
+    302,
+    20,
+    22
+   ],
+   [
+    1028,
+    125,
+    23,
+    26
+   ]
+  ],
+  "line": "The stars sway in the moonlight."
+ },
+ {
+  "id": "carved",
+  "name": "Carved wood",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    343,
+    540,
+    51,
+    150
+   ],
+   [
+    1085,
+    540,
+    56,
+    140
+   ]
+  ],
+  "line": "The carvings glow like gold."
+ },
+ {
+  "id": "branches",
+  "name": "Mossy branches",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    184,
+    550,
+    133,
+    60
+   ],
+   [
+    1218,
+    610,
+    102,
+    40
+   ]
+  ],
+  "line": "The branches turn soft and mossy."
+ },
+ {
+  "id": "vines",
+  "name": "Flower vines",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    87,
+    150,
+    61,
+    150
+   ],
+   [
+    1325,
+    110,
+    56,
+    110
+   ]
+  ],
+  "line": "The vines bloom with glowing flowers."
+ },
+ {
+  "id": "swirl",
+  "name": "Magic swirl",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    1233,
+    380,
+    113,
+    100
+   ]
+  ],
+  "line": "A ribbon of rainbow light dances by."
+ },
+ {
+  "id": "window",
+  "name": "Starry window",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    711,
+    205,
+    189,
+    135
+   ]
+  ],
+  "line": "The night sky opens up, full of stars."
+ },
+ {
+  "id": "hammock",
+  "name": "The star hammock",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    716,
+    520,
+    256,
+    130
+   ]
+  ],
+  "line": "The hammock and its star quilt glow, ready for dreams."
+ },
+ {
+  "id": "forest",
+  "name": "The forest outside",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    153,
+    420,
+    97,
+    200
+   ],
+   [
+    1243,
+    430,
+    97,
+    200
+   ]
+  ],
+  "line": "The forest outside wakes up, full of fireflies."
+ },
+ {
+  "id": "tree",
+  "name": "The Great Tree",
+  "kind": "finale",
+  "sums": 8,
+  "shapes": [
+   [
+    704,
+    384,
+    0,
+    0
+   ]
+  ],
+  "full": true,
+  "line": "The Great Tree glows, and the whole observatory is alive!"
+ }
+]
