@@ -107,3 +107,6 @@ Whole completion from last answer to the room waking is about 2.4 seconds. This 
 - 0.5 On completion the gems gather into a comet and fly to the point being revealed.
 - 0.6 Second room (library loft) and a room picker.
 - 0.7 World map. Rooms switch without reloading. A room opens when the room it requires is finished (set in `room.json`). Map shows progress per room and overall. Same maths mix in every room.
+- 0.8 Kitchen added as room 3 (opens after the Library Loft). Map redrawn as one great tree. Fixed a bug where the map stayed visible inside a room.
+- 0.9 Bathroom added as room 4 (opens after the Kitchen).
+- 1.0 Potion Workshop added as room 5 (opens after the Bathroom). Five rooms in all.

@@ -1,0 +1,7 @@
+{
+ "title": "Bathroom",
+ "order": 4,
+ "requires": "kitchen",
+ "blurb": "A copper bath under a waterfall, with a frog king on guard.",
+ "intro": "The bathroom has gone cold and still. Let’s get the waterfall flowing!"
+}

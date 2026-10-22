@@ -1,0 +1,387 @@
+[
+ {
+  "id": "lantern-c",
+  "name": "Hanging lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    572,
+    350,
+    32,
+    50
+   ]
+  ],
+  "line": "The little lantern glows warm and gold."
+ },
+ {
+  "id": "lantern-d",
+  "name": "Doorway lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    1208,
+    290,
+    34,
+    55
+   ]
+  ],
+  "line": "A lantern lights the way outside."
+ },
+ {
+  "id": "lights",
+  "name": "String lights",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    722,
+    85,
+    65,
+    28
+   ]
+  ],
+  "line": "The tiny lights twinkle awake."
+ },
+ {
+  "id": "plant-l",
+  "name": "Hanging plant",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    620,
+    308,
+    35,
+    30
+   ]
+  ],
+  "line": "The little plant perks up."
+ },
+ {
+  "id": "plant-r",
+  "name": "Hanging succulent",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    1072,
+    475,
+    30,
+    42
+   ]
+  ],
+  "line": "The succulent turns fresh and green."
+ },
+ {
+  "id": "lilies",
+  "name": "Water lilies",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    700,
+    540,
+    28,
+    13
+   ],
+   [
+    730,
+    530,
+    22,
+    16
+   ],
+   [
+    862,
+    545,
+    28,
+    13
+   ]
+  ],
+  "line": "The lilies open on the water."
+ },
+ {
+  "id": "basket",
+  "name": "Sponge basket",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    1040,
+    637,
+    45,
+    42
+   ]
+  ],
+  "line": "The sponges are soft and ready."
+ },
+ {
+  "id": "brush",
+  "name": "Wooden brush",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    185,
+    722,
+    52,
+    28
+   ]
+  ],
+  "line": "The brush is ready for a good scrub."
+ },
+ {
+  "id": "frog",
+  "name": "Frog king",
+  "kind": "incantation",
+  "sums": 4,
+  "shapes": [
+   [
+    958,
+    480,
+    40,
+    55
+   ]
+  ],
+  "line": "The frog king croaks happily and straightens his crown."
+ },
+ {
+  "id": "bottle-shelf",
+  "name": "Bottle shelves",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    435,
+    258,
+    55,
+    38
+   ],
+   [
+    420,
+    345,
+    62,
+    48
+   ]
+  ],
+  "line": "The bottles shimmer green and blue."
+ },
+ {
+  "id": "soap-shelf",
+  "name": "Soap shelf",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    420,
+    420,
+    55,
+    28
+   ],
+   [
+    398,
+    500,
+    38,
+    48
+   ]
+  ],
+  "line": "The soaps smell of flowers."
+ },
+ {
+  "id": "towels",
+  "name": "Towels",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    175,
+    545,
+    90,
+    105
+   ],
+   [
+    262,
+    672,
+    110,
+    62
+   ]
+  ],
+  "line": "The towels are soft and fluffy."
+ },
+ {
+  "id": "tub",
+  "name": "Copper bathtub",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    790,
+    605,
+    235,
+    85
+   ]
+  ],
+  "line": "The copper bath gleams and the water steams."
+ },
+ {
+  "id": "ferns",
+  "name": "Ferns",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    885,
+    165,
+    115,
+    95
+   ],
+   [
+    590,
+    165,
+    105,
+    100
+   ]
+  ],
+  "line": "The ferns unfurl, green and lush."
+ },
+ {
+  "id": "cupboard",
+  "name": "Carved cupboard",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    440,
+    585,
+    72,
+    95
+   ]
+  ],
+  "line": "The carvings glow like gold."
+ },
+ {
+  "id": "rug",
+  "name": "Round rug",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    760,
+    742,
+    300,
+    45
+   ]
+  ],
+  "line": "The rug warms the stone floor."
+ },
+ {
+  "id": "moss",
+  "name": "Soft moss",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    395,
+    75,
+    70,
+    70
+   ],
+   [
+    1130,
+    85,
+    90,
+    75
+   ]
+  ],
+  "line": "The moss turns velvety green."
+ },
+ {
+  "id": "vines",
+  "name": "Flower vines",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    75,
+    160,
+    60,
+    150
+   ],
+   [
+    1320,
+    110,
+    60,
+    115
+   ]
+  ],
+  "line": "The vines bloom with glowing flowers."
+ },
+ {
+  "id": "waterfall",
+  "name": "The waterfall",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    775,
+    385,
+    75,
+    150
+   ]
+  ],
+  "line": "The waterfall sparkles and splashes."
+ },
+ {
+  "id": "window",
+  "name": "Round window",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    985,
+    320,
+    85,
+    85
+   ]
+  ],
+  "line": "The stained glass lights up in every colour."
+ },
+ {
+  "id": "forest",
+  "name": "The forest outside",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    1250,
+    380,
+    95,
+    200
+   ],
+   [
+    110,
+    280,
+    85,
+    170
+   ]
+  ],
+  "line": "The forest outside wakes up, full of fireflies."
+ },
+ {
+  "id": "tree",
+  "name": "The Great Tree",
+  "kind": "finale",
+  "sums": 8,
+  "shapes": [
+   [
+    704,
+    384,
+    0,
+    0
+   ]
+  ],
+  "full": true,
+  "line": "The Great Tree glows, and the whole bathroom is alive!"
+ }
+]

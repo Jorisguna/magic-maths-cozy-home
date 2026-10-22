@@ -1,0 +1,7 @@
+{
+ "title": "Potion Workshop",
+ "order": 5,
+ "requires": "bathroom",
+ "blurb": "Bubbling potions, old books and a little dragon.",
+ "intro": "The workshop has gone quiet. Let’s get the potions bubbling!"
+}

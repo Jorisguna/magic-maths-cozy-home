@@ -1,0 +1,369 @@
+[
+ {
+  "id": "lantern-h",
+  "name": "Hanging lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    708,
+    165,
+    49,
+    75
+   ]
+  ],
+  "line": "The big lantern glows warm and golden."
+ },
+ {
+  "id": "lantern-w",
+  "name": "Garden lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    1215,
+    225,
+    41,
+    55
+   ]
+  ],
+  "line": "A lantern lights the path outside."
+ },
+ {
+  "id": "bulbs",
+  "name": "String lights",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    189,
+    215,
+    51,
+    55
+   ]
+  ],
+  "line": "The little lights twinkle awake."
+ },
+ {
+  "id": "teapot",
+  "name": "Teapot",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    974,
+    585,
+    53,
+    40
+   ]
+  ],
+  "line": "The teapot starts to steam."
+ },
+ {
+  "id": "garlic",
+  "name": "Garlic bunch",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    596,
+    315,
+    31,
+    55
+   ]
+  ],
+  "line": "The garlic smells wonderful."
+ },
+ {
+  "id": "herbs",
+  "name": "Herb bundles",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    642,
+    305,
+    27,
+    45
+   ],
+   [
+    671,
+    320,
+    29,
+    50
+   ]
+  ],
+  "line": "The herbs turn green and fresh."
+ },
+ {
+  "id": "plant",
+  "name": "Window plant",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    993,
+    478,
+    29,
+    35
+   ]
+  ],
+  "line": "The little plant perks up."
+ },
+ {
+  "id": "pie",
+  "name": "Berry pie",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    857,
+    630,
+    56,
+    30
+   ]
+  ],
+  "line": "The pie is golden and warm."
+ },
+ {
+  "id": "mouse",
+  "name": "Cook mouse",
+  "kind": "incantation",
+  "sums": 4,
+  "shapes": [
+   [
+    783,
+    465,
+    72,
+    95
+   ]
+  ],
+  "line": "The little cook squeaks with joy and stirs faster."
+ },
+ {
+  "id": "jam-shelf",
+  "name": "Jam shelves",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    435,
+    320,
+    82,
+    45
+   ],
+   [
+    435,
+    405,
+    82,
+    45
+   ]
+  ],
+  "line": "The jam jars glow like jewels."
+ },
+ {
+  "id": "bottle-shelf",
+  "name": "Bottle shelf",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    394,
+    505,
+    46,
+    55
+   ]
+  ],
+  "line": "The bottles clink happily."
+ },
+ {
+  "id": "oven",
+  "name": "Bread oven",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    489,
+    490,
+    87,
+    75
+   ]
+  ],
+  "line": "The oven warms up and the bread smells lovely."
+ },
+ {
+  "id": "hearth",
+  "name": "Firewood hearth",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    509,
+    597,
+    63,
+    48
+   ]
+  ],
+  "line": "The logs crackle softly."
+ },
+ {
+  "id": "pans",
+  "name": "Hanging pans",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    742,
+    305,
+    56,
+    70
+   ]
+  ],
+  "line": "The copper pans shine."
+ },
+ {
+  "id": "towels",
+  "name": "Tea towels",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    906,
+    220,
+    59,
+    62
+   ],
+   [
+    929,
+    495,
+    23,
+    52
+   ]
+  ],
+  "line": "The flowery towels swish into colour."
+ },
+ {
+  "id": "table",
+  "name": "Round table",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    849,
+    705,
+    205,
+    55
+   ]
+  ],
+  "line": "The table is laid for tea."
+ },
+ {
+  "id": "rug",
+  "name": "Woven rug",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    609,
+    685,
+    102,
+    42
+   ]
+  ],
+  "line": "The rug unrolls in warm colours."
+ },
+ {
+  "id": "vines",
+  "name": "Flower vines",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    276,
+    560,
+    51,
+    150
+   ],
+   [
+    353,
+    330,
+    46,
+    140
+   ],
+   [
+    1146,
+    500,
+    41,
+    170
+   ]
+  ],
+  "line": "The vines bloom with glowing flowers."
+ },
+ {
+  "id": "cauldron",
+  "name": "The cauldron",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    660,
+    525,
+    77,
+    85
+   ]
+  ],
+  "line": "The cauldron bubbles and the whole kitchen glows."
+ },
+ {
+  "id": "window",
+  "name": "Round window",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    1023,
+    385,
+    72,
+    130
+   ]
+  ],
+  "line": "Moonlight pours through the window."
+ },
+ {
+  "id": "forest",
+  "name": "The forest outside",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    1279,
+    380,
+    113,
+    250
+   ],
+   [
+    87,
+    400,
+    97,
+    260
+   ]
+  ],
+  "line": "The forest outside wakes up, full of fireflies."
+ },
+ {
+  "id": "tree",
+  "name": "The Great Tree",
+  "kind": "finale",
+  "sums": 8,
+  "shapes": [
+   [
+    704,
+    384,
+    0,
+    0
+   ]
+  ],
+  "full": true,
+  "line": "The Great Tree glows, and the whole kitchen is alive!"
+ }
+]

@@ -1,0 +1,7 @@
+{
+ "title": "Kitchen",
+ "order": 3,
+ "requires": "library-loft",
+ "blurb": "A warm kitchen with a bubbling cauldron and a busy little cook.",
+ "intro": "The kitchen has gone cold and quiet. Let’s get the cauldron bubbling!"
+}
