@@ -1,6 +1,7 @@
 (function () {
   'use strict';
   var ROOMS = __ROOMS__;
+  var WORLD = __WORLD__;
   var W = 1408, H = 768;
   var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var $ = function (id) { return document.getElementById(id); };
@@ -858,82 +859,95 @@
     render(); drawFx(); updateMeter(); idleGuide(); showIdle();
   });
 
-  /* ---------- World map: one great tree, climbed from the bottom ---------- */
-  var VW = 600, STEP = 210, TOP = 170, BOT = 150;
-  function mapHeight() { return TOP + ROOMS.length * STEP + BOT; }
-  function nodeXY(i) { return [i % 2 ? 450 : 150, mapHeight() - BOT - STEP * (i + 0.5)]; }
-  function treeSvg(open) {
-    var H = mapHeight(), o = '';
-    // sky: moon and stars
-    for (var k = 0; k < 46; k++) {
-      var sx = (k * 137.5) % VW, sy = (k * 61.8 * 3.1) % (H * 0.8);
-      o += '<circle class="star" cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" r="' + (0.8 + (k % 3) * 0.5) + '" style="animation-delay:' + (k % 7) * 0.6 + 's"/>';
-    }
-    o += '<circle cx="500" cy="70" r="30" fill="#f6efd2" opacity="0.95"/><circle cx="512" cy="64" r="28" fill="#253b5e"/>';
-    // trunk
-    var L = [], R = [], y;
-    for (y = H - BOT + 20; y >= TOP - 30; y -= 40) {
-      L.push([255 + 8 * Math.sin(y / 47), y]); R.push([345 + 8 * Math.sin(y / 53 + 1), y]);
-    }
-    var b = H - BOT + 55;
-    var d = 'M150 ' + (b + 30) + ' Q250 ' + b + ' ' + L[0][0] + ' ' + L[0][1];
-    L.forEach(function (p) { d += ' L' + p[0].toFixed(1) + ' ' + p[1]; });
-    R.reverse().forEach(function (p) { d += ' L' + p[0].toFixed(1) + ' ' + p[1]; });
-    d += ' Q350 ' + b + ' 450 ' + (b + 30) + ' Z';
-    o += '<path d="' + d + '" fill="url(#bark)"/>';
-    for (k = 0; k < 7; k++) {
-      var bx = 268 + k * 11;
-      o += '<path d="M' + bx + ' ' + (H - BOT + 30) + ' L' + (bx + (k % 2 ? 4 : -4)) + ' ' + (TOP + 10) + '" stroke="#2a1d12" stroke-width="2" opacity="0.35" fill="none"/>';
-    }
-    // branches to each room
-    ROOMS.forEach(function (r, i) {
-      var p = nodeXY(i), side = p[0] < 300 ? -1 : 1, by = p[1] + 50;
-      var dd = 'M300 ' + (by + 20) + ' Q' + (300 + side * 70) + ' ' + (by + 14) + ' ' + p[0] + ' ' + p[1];
-      o += '<path d="' + dd + '" stroke="#5b3f27" stroke-width="30" stroke-linecap="round" fill="none"/>';
-      o += '<path d="' + dd + '" stroke="#7a5535" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/>';
-      if (open[r.id]) o += '<path class="lights" d="' + dd + '" fill="none"/>';
+  /* ---------- World map: a painting of the great tree; each room wakes into colour as you restore it ---------- */
+  var mapGrey = null, mapMask = document.createElement('canvas');
+  mapMask.width = W; mapMask.height = H;
+  // how much colour a room has on the map: none while locked, half when open, all of it when restored
+  function roomColour(r) {
+    if (!isUnlocked(r)) return 0;
+    if (roomDone(r)) return 1;
+    return 0.5 + 0.5 * roomCount(r) / r.hotspots.length;
+  }
+  // a grey, darkened copy of the painting (built once from the picture's pixels)
+  function loadMapGrey(cb) {
+    if (mapGrey) { cb(); return; }
+    var img = new Image();
+    img.onload = function () {
+      var c = document.createElement('canvas'); c.width = W; c.height = H;
+      var x = c.getContext('2d');
+      x.drawImage(img, 0, 0, W, H);
+      try {
+        var d = x.getImageData(0, 0, W, H), p = d.data;
+        for (var i = 0; i < p.length; i += 4) { p[i] = p[i + 1] = p[i + 2] = (p[i] * 0.3 + p[i + 1] * 0.59 + p[i + 2] * 0.11) * 0.55; }
+        x.putImageData(d, 0, 0);
+      } catch (e) { x.fillStyle = 'rgba(14,16,28,0.8)'; x.fillRect(0, 0, W, H); }
+      mapGrey = c; cb();
+    };
+    img.src = WORLD.img;
+  }
+  function drawMapVeil() {
+    if (!mapGrey) return;
+    var m = mapMask.getContext('2d');
+    m.clearRect(0, 0, W, H);
+    ROOMS.forEach(function (r) {
+      var s = r.map, v = 1 - roomColour(r);
+      if (v <= 0) return;
+      m.save();
+      m.globalAlpha = v;
+      m.translate(s[0], s[1]); m.scale(s[2], s[3]);
+      var g = m.createRadialGradient(0, 0, 0, 0, 0, 1);
+      g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.62, 'rgba(255,255,255,1)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      m.fillStyle = g; m.fillRect(-1, -1, 2, 2);
+      m.restore();
     });
-    // canopy
-    [[90, 80, 90, 70], [210, 60, 100, 70], [330, 50, 110, 75], [450, 75, 100, 70], [545, 100, 70, 60], [300, 120, 150, 60], [60, 140, 60, 50], [540, 160, 60, 50]].forEach(function (c, n) {
-      o += '<ellipse cx="' + c[0] + '" cy="' + c[1] + '" rx="' + c[2] + '" ry="' + c[3] + '" fill="' + (n % 2 ? '#1c4a39' : '#173a2e') + '"/>';
-    });
-    for (k = 0; k < 14; k++) {
-      o += '<circle class="star warm" cx="' + (40 + (k * 83) % 520) + '" cy="' + (60 + (k * 47) % 110) + '" r="3" style="animation-delay:' + (k % 5) * 0.5 + 's"/>';
-    }
-    // forest floor
-    o += '<ellipse cx="300" cy="' + (H - 10) + '" rx="420" ry="' + (BOT - 40) + '" fill="#1a2c3d"/>';
-    o += '<ellipse cx="300" cy="' + (H - 20) + '" rx="300" ry="' + (BOT - 70) + '" fill="#223a4c"/>';
-    return '<defs><linearGradient id="bark" x1="0" x2="1"><stop offset="0" stop-color="#34251a"/><stop offset="0.5" stop-color="#6a4a2e"/><stop offset="1" stop-color="#34251a"/></linearGradient></defs>' + o;
+    var c = $('mapVeil').getContext('2d');
+    c.globalCompositeOperation = 'source-over';
+    c.clearRect(0, 0, W, H);
+    c.drawImage(mapGrey, 0, 0);
+    c.globalCompositeOperation = 'destination-in';
+    c.drawImage(mapMask, 0, 0);
+    c.globalCompositeOperation = 'source-over';
+  }
+  function roomState(r) { return !isUnlocked(r) ? 'locked' : roomDone(r) ? 'done' : 'open'; }
+  function roomInfo(r) {
+    var got = roomCount(r), total = r.hotspots.length;
+    return !isUnlocked(r) ? 'Locked' : roomDone(r) ? 'Restored' : got === 0 ? 'Tap to enter' : got + ' of ' + total + ' restored';
+  }
+  function tapRoom(r) {
+    if (!isUnlocked(r)) { $('mapGuide').textContent = 'This room is still asleep. Wake up the ' + roomById(r.requires).title + ' first and it will open.'; return; }
+    enterRoom(r);
   }
   function renderMap() {
-    var map = $('map');
+    var map = $('map'), list = $('mapList');
     [].slice.call(map.querySelectorAll('.node')).forEach(function (n) { map.removeChild(n); });
-    var H = mapHeight(), open = {};
-    ROOMS.forEach(function (r) { open[r.id] = isUnlocked(r); });
-    map.style.aspectRatio = VW + ' / ' + H;
-    $('mapTree').setAttribute('viewBox', '0 0 ' + VW + ' ' + H);
-    $('mapTree').innerHTML = treeSvg(open);
-    ROOMS.forEach(function (r, i) {
-      var isOpen = open[r.id], done = roomDone(r), got = roomCount(r), total = r.hotspots.length, xy = nodeXY(i);
+    list.textContent = '';
+    $('mapImg').src = WORLD.img;
+    loadMapGrey(drawMapVeil);
+    ROOMS.forEach(function (r) {
+      var st = roomState(r), s = r.map, need = r.requires && roomById(r.requires);
+      var label = r.title + ', ' + (st === 'locked' ? 'locked. Finish the ' + need.title + ' first' : st === 'done' ? 'restored' : roomCount(r) + ' of ' + r.hotspots.length + ' restored');
+      // an invisible button over the room's place in the painting
       var node = document.createElement('button');
-      node.type = 'button';
-      node.className = 'node ' + (!isOpen ? 'locked' : done ? 'done' : 'open');
-      node.style.left = (xy[0] / VW * 100) + '%'; node.style.top = (xy[1] / H * 100) + '%';
-      var pic = document.createElement('span'); pic.className = 'pic';
-      pic.style.backgroundImage = 'url("' + r.img + '")';
-      if (isOpen) pic.style.filter = 'grayscale(' + (0.5 * (1 - got / total)) + ') saturate(1.1)';
-      var name = document.createElement('span'); name.className = 'name'; name.textContent = r.title;
-      var info = document.createElement('span'); info.className = 'info';
-      info.textContent = !isOpen ? 'Locked' : done ? 'Restored' : got === 0 ? 'Tap to enter' : got + ' of ' + total + ' restored';
-      node.appendChild(pic); node.appendChild(name); node.appendChild(info);
-      var need = r.requires && roomById(r.requires);
-      node.setAttribute('aria-label', r.title + ', ' + (!isOpen ? 'locked. Finish the ' + need.title + ' first' : done ? 'restored' : got + ' of ' + total + ' restored'));
-      if (!isOpen) node.setAttribute('aria-disabled', 'true');
-      node.addEventListener('click', function () {
-        if (!isOpen) { $('mapGuide').textContent = 'This room is still asleep. Wake up the ' + need.title + ' first and it will open.'; return; }
-        enterRoom(r);
-      });
+      node.type = 'button'; node.className = 'node ' + st;
+      node.style.left = (s[0] / W * 100) + '%'; node.style.top = (s[1] / H * 100) + '%';
+      node.style.width = (s[2] * 2 / W * 100) + '%'; node.style.height = (s[3] * 2 / H * 100) + '%';
+      node.setAttribute('aria-label', label);
+      if (st === 'locked') node.setAttribute('aria-disabled', 'true');
+      var tag = document.createElement('span'); tag.className = 'tag';
+      var nm = document.createElement('b'); nm.textContent = r.title;
+      var inf = document.createElement('small'); inf.textContent = roomInfo(r);
+      tag.appendChild(nm); tag.appendChild(inf); node.appendChild(tag);
+      node.addEventListener('click', function () { tapRoom(r); });
       map.appendChild(node);
+      // the same rooms as a list under the map (used on small screens)
+      var li = document.createElement('button');
+      li.type = 'button'; li.className = 'room-btn ' + st;
+      var a = document.createElement('span'); a.textContent = r.title;
+      var b = document.createElement('small'); b.textContent = roomInfo(r);
+      li.appendChild(a); li.appendChild(b);
+      if (st === 'locked') li.setAttribute('aria-disabled', 'true');
+      li.addEventListener('click', function () { tapRoom(r); });
+      list.appendChild(li);
     });
   }
   function nextRooms() { return ROOMS.filter(function (r) { return isUnlocked(r) && !roomDone(r); }); }
@@ -941,9 +955,9 @@
     var any = ROOMS.some(function (r) { return roomCount(r) > 0; });
     var next = nextRooms();
     var text = mapMsg || (!next.length ? 'Every room is awake again. You did it!'
-      : !any ? 'Welcome to the great tree! Tap the glowing window to begin. Finish a room and the next one opens.'
-      : next.length === 1 ? 'Next up: the ' + next[0].title + '. Tap the glowing window to go in.'
-      : 'Which room shall we wake up? Tap a glowing window.');
+      : !any ? 'Welcome to the great tree! Tap the glowing room to begin. Finish a room and the next one opens.'
+      : next.length === 1 ? 'Next up: the ' + next[0].title + '. Tap the glowing room to go in.'
+      : 'Which room shall we wake up? Tap a glowing room.');
     mapMsg = '';
     $('mapGuide').textContent = text;
   }
@@ -957,9 +971,7 @@
     $('roomView').hidden = true; $('mapView').hidden = false;
     $('roomName').textContent = 'World map';
     renderMap(); mapGuide(); updateMeter();
-    var focus = nextRooms()[0], el = focus && $('map').querySelectorAll('.node')[ROOMS.indexOf(focus)];
-    if (el && el.scrollIntoView) el.scrollIntoView({ block: 'center' });
-    else window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
   }
   function enterRoom(r) {
     ROOM = r; HOTSPOTS = r.hotspots; RESTORED_KEY = progressKey(r.id);

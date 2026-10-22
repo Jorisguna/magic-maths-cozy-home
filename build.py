@@ -3,7 +3,8 @@
 
 Usage: python3 build.py
 Every folder under rooms/ that holds room.jpg and hotspots.json becomes a room in the picker.
-An optional room.json beside them sets: title, order, blurb, intro (Pip's first line), and requires (the room id that must be finished first).
+An optional room.json beside them sets: title, order, blurb, intro (Pip's first line), requires (the room id that must be finished first) and map ([x, y, rx, ry] of the room's place on the painted world map, in image pixels).
+The world map picture is world/map.jpg (1408 x 768).
 Rooms are sorted by "order", then by folder name. A room with no "requires" is open from the start.
 """
 import base64, json, os, sys
@@ -32,6 +33,7 @@ def load_room(room):
         'blurb': meta.get('blurb', ''),
         'intro': meta.get('intro', ''),
         'requires': meta.get('requires', ''),
+        'map': meta.get('map'),
         'alt': 'A cosy ' + title.lower() + ' inside a huge tree, currently grey and cold',
         'hotspots': json.load(open(os.path.join(folder, 'hotspots.json'), encoding='utf-8')),
         'img': 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(folder, 'room.jpg'), 'rb').read()).decode(),
@@ -47,7 +49,11 @@ for r in rooms:
         sys.exit(f"Room {r['id']} requires unknown room {r['requires']}")
 
 page = shell.replace('/*__STYLES__*/', css).replace('/*__SCRIPT__*/', js)
-page = page.replace('__ROOMS__', json.dumps(rooms))
+for r in rooms:
+    if not r['map']:
+        sys.exit(f"Room {r['id']} has no \"map\" in room.json")
+world = {'img': 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(here, 'world', 'map.jpg'), 'rb').read()).decode()}
+page = page.replace('__ROOMS__', json.dumps(rooms)).replace('__WORLD__', json.dumps(world))
 
 os.makedirs(os.path.join(here, 'dist'), exist_ok=True)
 out = os.path.join(here, 'dist', 'maths-magic.html')

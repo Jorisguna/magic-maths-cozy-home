@@ -3,5 +3,11 @@
  "order": 5,
  "requires": "bathroom",
  "blurb": "Bubbling potions, old books and a little dragon.",
- "intro": "The workshop has gone quiet. Let’s get the potions bubbling!"
+ "intro": "The workshop has gone quiet. Let’s get the potions bubbling!",
+ "map": [
+  819,
+  550,
+  123,
+  108
+ ]
 }

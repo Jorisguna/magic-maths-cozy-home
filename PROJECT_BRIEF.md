@@ -112,3 +112,4 @@ Whole completion from last answer to the room waking is about 2.4 seconds. This 
 - 1.0 Potion Workshop added as room 5 (opens after the Bathroom). Five rooms in all.
 - 1.1 Acorn Nursery added as room 6 (opens after the Potion Workshop).
 - 1.2 Observatory added as room 7 (opens after the Acorn Nursery). Seven rooms in all.
+- 1.3 World map is now a painting of the great tree (`world/map.jpg`). Each room starts grey and locked, glows when open, and wakes into colour as it is restored. The Library Loft has no room in the painting yet, so it sits at the little door on the top-right platform.

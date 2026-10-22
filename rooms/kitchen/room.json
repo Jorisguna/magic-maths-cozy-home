@@ -3,5 +3,11 @@
  "order": 3,
  "requires": "library-loft",
  "blurb": "A warm kitchen with a bubbling cauldron and a busy little cook.",
- "intro": "The kitchen has gone cold and quiet. Let’s get the cauldron bubbling!"
+ "intro": "The kitchen has gone cold and quiet. Let’s get the cauldron bubbling!",
+ "map": [
+  237,
+  545,
+  179,
+  155
+ ]
 }

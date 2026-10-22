@@ -15,6 +15,7 @@ A web game where times-table sums cast spells that bring a grey room to life. Re
 | `art/ART-BRIEF.md` | How to make more rooms that match |
 | `build.py` | Builds `dist/maths-magic.html` |
 | `dist/maths-magic.html` | The finished single-file page, built by `build.py` |
+| `world/map.jpg` | The painted world map (1408 x 768). Each room is a hollow in this tree |
 | `docs/index.html` | A copy of the built page. GitHub Pages serves this, so it is the live version |
 
 ## Build
@@ -25,7 +26,7 @@ A web game where times-table sums cast spells that bring a grey room to life. Re
 2. Create `rooms/<name>/` with `room.jpg`, `hotspots.json` (same format as the bedroom) and `room.json`.
 3. Run `python3 build.py`. The room appears on the world map.
 
-`room.json` fields (all optional): `title`, `order` (position on the map and in the sequence), `blurb`, `intro` (Pip's first line in the room), `requires` (id of the room that must be finished first; none means open from the start). Rooms are placed on the great tree automatically, first room at the bottom.
+`room.json` fields (`map` is required, the rest optional): `title`, `order` (position on the map and in the sequence), `blurb`, `intro` (Pip's first line in the room), `requires` (id of the room that must be finished first; none means open from the start). `map` is `[x, y, rx, ry]`, the room's place on the painted world map in image pixels (like a hotspot shape). Build stops with a message if a room has no `map`.
 
 ## Test locally
 Run `python3 build.py`, then double-click `dist/maths-magic.html` (Finder: MagicMathsCozyHome, then dist). Refresh the browser tab after each rebuild. Use "Prototype tools" under the game to preview a finished room, and "Reset all progress" under the map to start fresh.

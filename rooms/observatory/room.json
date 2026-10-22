@@ -3,5 +3,11 @@
  "order": 7,
  "requires": "nursery",
  "blurb": "A starry hammock, a brass telescope and a window full of night sky.",
- "intro": "The observatory has gone dark. Let’s light up the stars!"
+ "intro": "The observatory has gone dark. Let’s light up the stars!",
+ "map": [
+  701,
+  150,
+  143,
+  145
+ ]
 }

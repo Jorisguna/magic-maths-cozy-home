@@ -3,5 +3,11 @@
  "order": 2,
  "requires": "treehouse-bedroom",
  "blurb": "Books, maps and a telescope under the roof.",
- "intro": "This is the library loft! The books have gone quiet. Cast some spells and let’s wake them up."
+ "intro": "This is the library loft! The books have gone quiet. Cast some spells and let’s wake them up.",
+ "map": [
+  1126,
+  178,
+  74,
+  58
+ ]
 }
