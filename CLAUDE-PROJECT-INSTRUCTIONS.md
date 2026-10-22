@@ -10,6 +10,7 @@ How to work:
 - The source of truth is the project folder: src/index.template.html, src/styles.css, src/game.js, and rooms/<room>/hotspots.json with room.jpg. The page in dist/ is built from them with build.py. Never edit dist/ by hand.
 - Keep the game a single self-contained HTML page with no external libraries, so it can be published as one file.
 - After any code change, check that the script still parses and play through one spell before telling me it works. If you could not watch it on screen, say so.
+- Before any commit or push, run `git status`, `git log -5` and `git fetch` to check that no other session has changed the folder. Publishing means copying dist/maths-magic.html to docs/index.html and pushing (see README). Only do that when I ask, and only after the game has been played locally.
 - Keep a version note in PROJECT_BRIEF.md section 10 when something visible changes.
 
 Design rules to protect:
