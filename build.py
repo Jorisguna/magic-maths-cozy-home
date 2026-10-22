@@ -3,7 +3,8 @@
 
 Usage: python3 build.py
 Every folder under rooms/ that holds room.jpg and hotspots.json becomes a room in the picker.
-The treehouse bedroom comes first, the rest in alphabetical order.
+An optional room.json beside them sets: title, order, blurb, intro (Pip's first line), requires (the room id that must be finished first) and map ([x, y] percentages on the world map).
+Rooms are sorted by "order", then by folder name. A room with no "requires" is open from the start.
 """
 import base64, json, os, sys
 
@@ -19,10 +20,19 @@ js = read('src', 'game.js')
 
 def load_room(room):
     folder = os.path.join(here, 'rooms', room)
-    title = room.replace('-', ' ').title()
+    meta = {}
+    meta_path = os.path.join(folder, 'room.json')
+    if os.path.exists(meta_path):
+        meta = json.load(open(meta_path, encoding='utf-8'))
+    title = meta.get('title') or room.replace('-', ' ').title()
     return {
         'id': room,
         'title': title,
+        'order': meta.get('order', 999),
+        'blurb': meta.get('blurb', ''),
+        'intro': meta.get('intro', ''),
+        'requires': meta.get('requires', ''),
+        'map': meta.get('map'),
         'alt': 'A cosy ' + title.lower() + ' inside a huge tree, currently grey and cold',
         'hotspots': json.load(open(os.path.join(folder, 'hotspots.json'), encoding='utf-8')),
         'img': 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(folder, 'room.jpg'), 'rb').read()).decode(),
@@ -30,8 +40,12 @@ def load_room(room):
 
 names = sorted(n for n in os.listdir(os.path.join(here, 'rooms'))
                if os.path.exists(os.path.join(here, 'rooms', n, 'room.jpg')))
-names.sort(key=lambda n: n != 'treehouse-bedroom')
-rooms = [load_room(n) for n in names]
+rooms = sorted((load_room(n) for n in names), key=lambda r: (r['order'], r['id']))
+names = [r['id'] for r in rooms]
+ids = set(names)
+for r in rooms:
+    if r['requires'] and r['requires'] not in ids:
+        sys.exit(f"Room {r['id']} requires unknown room {r['requires']}")
 
 page = shell.replace('/*__STYLES__*/', css).replace('/*__SCRIPT__*/', js)
 page = page.replace('__ROOMS__', json.dumps(rooms))

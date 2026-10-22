@@ -88,7 +88,7 @@ Whole completion from last answer to the room waking is about 2.4 seconds. This 
 ## 8. Roadmap suggestion
 1. Playtest this room with 2 or 3 children and a teacher, watched without help.
 2. Add a second and third room (new art plus hotspots).
-3. A simple world map: the small treehouses in the background of the room become doors to the next rooms.
+3. World map: built (0.7) as a simple coded map. A painted map, with the small treehouses as doors, can replace it later.
 4. Sound.
 5. Decide the buyer, then build teacher or parent features.
 
@@ -105,3 +105,5 @@ Whole completion from last answer to the room waking is about 2.4 seconds. This 
 - 0.3 Per-tap effects: charged stone, flying number, landing sparks.
 - 0.4 Dynamic gems. Correct answer melts into an orb that fills the next gem.
 - 0.5 On completion the gems gather into a comet and fly to the point being revealed.
+- 0.6 Second room (library loft) and a room picker.
+- 0.7 World map. Rooms switch without reloading. A room opens when the room it requires is finished (set in `room.json`). Map shows progress per room and overall. Same maths mix in every room.

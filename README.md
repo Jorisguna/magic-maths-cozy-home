@@ -17,11 +17,11 @@ A web game where times-table sums cast spells that bring a grey room to life. Re
 | `dist/maths-magic.html` | The finished single-file page (this is what gets published) |
 
 ## Build
-`python3 build.py` builds the default room. `python3 build.py <room-folder-name>` builds another room, once more rooms exist under `rooms/`.
+`python3 build.py` builds one page with every room under `rooms/`.
 
-## Add a room (today)
+## Add a room
 1. Make the image (see `art/ART-BRIEF.md`).
-2. Create `rooms/<name>/` with `room.jpg` and a `hotspots.json` in the same format as the bedroom.
-3. Build with the room name.
+2. Create `rooms/<name>/` with `room.jpg`, `hotspots.json` (same format as the bedroom) and `room.json`.
+3. Run `python3 build.py`. The room appears on the world map.
 
-Support for several rooms inside one game (a world map and saved progress per room) is on the roadmap and not built yet.
+`room.json` fields (all optional): `title`, `order` (position on the map and in the sequence), `blurb`, `intro` (Pip's first line in the room), `requires` (id of the room that must be finished first; none means open from the start), `map` (`[x, y]` percentages on a wide screen; otherwise rooms zigzag across the map automatically).

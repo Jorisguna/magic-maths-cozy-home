@@ -12,7 +12,7 @@
   <header class="top">
     <div class="brand">
       <h1>Maths Magic</h1>
-      <p class="sub">Prototype 0.6 · <span id="roomName"></span></p>
+      <p class="sub">Prototype 0.7 · <span id="roomName"></span></p>
     </div>
     <div class="meter" aria-live="polite">
       <div class="meter-row"><span class="stage-name" id="stageName">Cold and grey</span><span class="count" id="count"></span></div>
@@ -20,8 +20,27 @@
     </div>
   </header>
 
-  <nav class="rooms" id="rooms" aria-label="Choose a room"></nav>
+  <section class="world" id="mapView" aria-label="World map">
+    <div class="guide-bar">
+      <svg class="pip-fairy" viewBox="0 0 48 48" aria-hidden="true">
+        <g fill="rgba(160,255,235,0.5)" stroke="rgba(210,255,246,0.9)" stroke-width="1">
+          <ellipse cx="13" cy="17" rx="11" ry="6.5" transform="rotate(-28 13 17)"/>
+          <ellipse cx="35" cy="17" rx="11" ry="6.5" transform="rotate(28 35 17)"/>
+          <ellipse cx="15" cy="30" rx="8" ry="4.8" transform="rotate(28 15 30)"/>
+          <ellipse cx="33" cy="30" rx="8" ry="4.8" transform="rotate(-28 33 30)"/>
+        </g>
+        <circle cx="24" cy="25" r="11" fill="rgba(255,236,160,0.35)"/>
+        <circle cx="24" cy="25" r="6.5" fill="#fff6c8"/>
+      </svg>
+      <p class="bubble" id="mapGuide" aria-live="polite"></p>
+    </div>
+    <div class="map" id="map">
+      <svg class="map-paths" id="mapPaths" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
+  </section>
 
+  <div id="roomView" hidden>
+  <button class="map-back" id="mapBtn" type="button">&larr; World map</button>
   <div class="layout">
     <div class="scene-wrap">
       <section class="scene">
@@ -74,12 +93,17 @@
 
   <details class="tools">
     <summary>Prototype tools</summary>
+    <div class="dims">
+      <label>Other fairies while casting <input type="range" id="dim-other" min="0" max="100" step="5"><output id="dimv-other"></output></label>
+      <label>Fairy being cast <input type="range" id="dim-current" min="0" max="100" step="5"><output id="dimv-current"></output></label>
+    </div>
     <div class="row">
       <button id="hintBtn" type="button">Show the answer</button>
       <button id="allBtn" type="button">Preview the finished room</button>
       <button id="resetBtn" type="button">Reset the room</button>
     </div>
   </details>
+  </div>
 </main>
 
 <script>

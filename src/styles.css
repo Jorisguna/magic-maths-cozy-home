@@ -76,22 +76,32 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
 
 .marker {
   position: absolute; width: 30px; height: 30px; transform: translate(-50%, -50%);
-  border-radius: 50%; border: 0; padding: 0; background: radial-gradient(circle, #fff7d6 0 22%, var(--gold) 45%, rgba(255, 198, 92, 0) 72%);
-  box-shadow: 0 0 14px 3px rgba(255, 198, 92, 0.55);
+  border: 0; padding: 0; background: none; color: var(--gold);
   animation: pulse 2.4s ease-in-out infinite;
+  transition: opacity 0.7s ease, filter 0.7s ease;
 }
-.marker[data-kind="incantation"] { background: radial-gradient(circle, #eafffa 0 22%, var(--teal) 45%, rgba(98, 227, 201, 0) 72%); box-shadow: 0 0 14px 3px rgba(98, 227, 201, 0.55); }
-.marker[data-kind="ritual"], .marker[data-kind="finale"] { background: radial-gradient(circle, #fbeaff 0 22%, #d79bff 45%, rgba(215, 155, 255, 0) 72%); box-shadow: 0 0 16px 4px rgba(215, 155, 255, 0.6); width: 36px; height: 36px; }
-.marker:hover, .marker:focus-visible { animation-play-state: paused; transform: translate(-50%, -50%) scale(1.25); }
+.marker .dot, .marker .star { position: absolute; inset: 0; border-radius: 50%; transition: opacity 0.7s ease; }
+.marker .dot { background: radial-gradient(circle, #fff7d6 0 22%, var(--gold) 45%, rgba(255, 198, 92, 0) 72%); box-shadow: 0 0 14px 3px rgba(255, 198, 92, 0.55); }
+.marker[data-kind="incantation"] { color: var(--teal); }
+.marker[data-kind="incantation"] .dot { background: radial-gradient(circle, #eafffa 0 22%, var(--teal) 45%, rgba(98, 227, 201, 0) 72%); box-shadow: 0 0 14px 3px rgba(98, 227, 201, 0.55); }
+.marker[data-kind="ritual"], .marker[data-kind="finale"] { width: 36px; height: 36px; color: #d79bff; }
+.marker[data-kind="ritual"] .dot, .marker[data-kind="finale"] .dot { background: radial-gradient(circle, #fbeaff 0 22%, #d79bff 45%, rgba(215, 155, 255, 0) 72%); box-shadow: 0 0 16px 4px rgba(215, 155, 255, 0.6); }
+.marker:hover, .marker:focus-visible { animation-play-state: paused; }
 @keyframes pulse { 0%, 100% { opacity: 0.65; scale: 0.9; } 50% { opacity: 1; scale: 1.1; } }
 
-.ring {
-  position: absolute; transform: translate(-50%, -50%); border-radius: 50%;
-  border: 2px solid var(--gold); box-shadow: 0 0 18px rgba(255, 198, 92, 0.8), inset 0 0 18px rgba(255, 198, 92, 0.35);
-  pointer-events: none; animation: ring 1.6s ease-in-out infinite;
-}
-.ring.full { inset: 6px; left: 6px; top: 6px; width: auto; height: auto; transform: none; border-radius: 12px; }
-@keyframes ring { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+/* the star fades in over the dot on the fairy being cast; the others stay on screen, dulled (levels set by the sliders) */
+.marker .star { opacity: 0; inset: -23px; animation: starGlow 2s ease-in-out infinite; }
+.marker[data-kind="ritual"] .star, .marker[data-kind="finale"] .star { inset: -24px; }
+.marker .star svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 0 6px currentColor); }
+.marker .rays { fill: currentColor; fill-opacity: 0.75; }
+.marker .rays.small { fill-opacity: 0.5; }
+.marker.current .star { opacity: 1; }
+.marker.current .dot { opacity: 0; }
+.marker.current, .marker.other { pointer-events: none; }
+.marker.other { filter: saturate(var(--other, 0.35)) opacity(var(--other, 0.35)); }
+.marker.current { filter: opacity(var(--current, 1)); }
+.marker.gone { pointer-events: none; opacity: 0; filter: opacity(0); }
+@keyframes starGlow { 0%, 100% { transform: scale(0.92) rotate(-6deg); } 50% { transform: scale(1.08) rotate(6deg); } }
 
 /* ---------- The spellbook ---------- */
 .panel {
@@ -274,6 +284,8 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
 
 .tools { color: var(--muted); font-size: 0.85rem; }
 .tools summary { cursor: pointer; padding: 4px 0; width: max-content; }
+.tools .dims { display: grid; gap: 8px; margin-top: 10px; max-width: 420px; }
+.tools .dims label { display: grid; grid-template-columns: 1fr 120px 44px; align-items: center; gap: 10px; }
 .tools .row { margin-top: 10px; justify-content: flex-start; }
 .tools button { min-height: 38px; padding: 4px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel-2); font-size: 0.85rem; }
 
@@ -285,14 +297,31 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
   .key { min-height: 50px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .marker, .ring, .pip-fairy { animation: none; }
+  .marker, .pip-fairy { animation: none; }
   .bar i, .pip, .key { transition: none; }
   .key.zap, .key.zap::after, .q .ans .d.in, .q.fizz { animation: none; }
   .pip, .pip.on, .pip.next, .pip.pop, .pip.pop::after, .pip.on .shine, .chain.allpulse .pip { animation: none; }
   .pip .well, .chain::after { transition: none; }
 }
-.rooms { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; }
-.room-btn { display: flex; flex-direction: column; align-items: flex-start; min-height: 48px; padding: 6px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel-2); color: inherit; font: inherit; cursor: pointer; }
-.room-btn span { font-family: 'Fondamento', serif; font-size: 1.05rem; }
-.room-btn small { color: var(--muted); font-size: 0.78rem; }
-.room-btn.on { border-color: #e8c66a; box-shadow: 0 0 0 1px #e8c66a inset; cursor: default; }
+/* World map: rooms are nodes joined by a winding path */
+.world { display: flex; flex-direction: column; gap: 10px; }
+.map { position: relative; aspect-ratio: 16 / 9; min-height: 340px; border-radius: 18px; border: 1px solid var(--line); overflow: hidden;
+  background: radial-gradient(ellipse at 50% 40%, #2f4a4a 0%, #1f2a3c 55%, #171a2b 100%); }
+.map.tall { aspect-ratio: auto; min-height: 0; }
+.map-paths { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.map-paths path { fill: none; stroke: rgba(255, 214, 120, 0.35); stroke-width: 3; stroke-dasharray: 2 9; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.map-paths path.open { stroke: rgba(255, 214, 120, 0.85); }
+.node { position: absolute; transform: translate(-50%, -50%); width: clamp(92px, 15vw, 150px); display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0; background: none; border: 0; text-align: center; }
+.node .pic { width: 100%; aspect-ratio: 1; border-radius: 50%; background-size: cover; background-position: center; border: 3px solid #5a4d7c; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5); position: relative; transition: transform 0.2s, box-shadow 0.2s; }
+.node .name { font-family: var(--font-display); font-size: 1rem; line-height: 1.15; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8); }
+.node .info { font-size: 0.78rem; color: var(--muted); text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8); }
+.node:not(:disabled):hover .pic { transform: scale(1.06); }
+.node.open .pic { border-color: #e8c66a; box-shadow: 0 0 0 4px rgba(232, 198, 106, 0.25), 0 0 26px rgba(255, 200, 90, 0.5); }
+.node.done .pic { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(98, 227, 201, 0.22), 0 0 22px rgba(98, 227, 201, 0.45); }
+.node.done .pic::after { content: "\2713"; position: absolute; right: -2px; bottom: -2px; width: 30px; height: 30px; border-radius: 50%; background: var(--teal); color: #08352c; display: grid; place-items: center; font-weight: 800; }
+.node.locked { cursor: default; }
+.node.locked .pic { filter: grayscale(1) brightness(0.45); border-color: #3b3259; }
+.node.locked .pic::after { content: "\1F512"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 1.8rem; }
+.node.locked .name { color: var(--muted); }
+.map-back { align-self: flex-start; background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; min-height: 44px; padding: 6px 16px; font-family: var(--font-display); margin-bottom: 14px; }
+.map-back:hover { border-color: #e8c66a; }

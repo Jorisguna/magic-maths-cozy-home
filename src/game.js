@@ -10,18 +10,21 @@
     set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   };
 
-  var roomId = store.get('mm_room', ROOMS[0].id);
-  var ROOM = ROOMS.filter(function (r) { return r.id === roomId; })[0] || ROOMS[0];
-  var HOTSPOTS = ROOM.hotspots;
-  // the first room keeps its original key so earlier progress is not lost
-  function progressKey(id) { return id === ROOMS[0].id ? 'mm_restored' : 'mm_restored_' + id; }
-  var RESTORED_KEY = progressKey(ROOM.id);
-  var restored = new Set(store.get(RESTORED_KEY, []));
+  /* ---------- World: rooms, progress and unlocking ---------- */
+  // the room being played (set by enterRoom)
+  var ROOM = null, HOTSPOTS = [], RESTORED_KEY = '', restored = new Set(), prog = {};
+  var view = 'map';
+  var mapMsg = '';
+  // the bedroom keeps its original key so earlier progress is not lost
+  function progressKey(id) { return id === 'treehouse-bedroom' ? 'mm_restored' : 'mm_restored_' + id; }
+  function roomCount(r) { return new Set(store.get(progressKey(r.id), [])).size; }
+  function roomDone(r) { return roomCount(r) >= r.hotspots.length; }
+  function roomById(id) { return ROOMS.filter(function (r) { return r.id === id; })[0]; }
+  // a room opens when the room it requires is finished (no requirement: always open)
+  function isUnlocked(r) { return !r.requires || roomDone(roomById(r.requires)); }
   var tables = store.get('mm_tables', [2, 5, 10]);
   var stats = store.get('mm_stats', {});
   var review = [];
-  var prog = {};
-  HOTSPOTS.forEach(function (h) { prog[h.id] = restored.has(h.id) ? 1 : 0; });
 
   var STAGES = [
     { name: 'Cold and grey', msg: '' },
@@ -71,7 +74,7 @@
   var fxCv = $('fx'), fctx = fxCv.getContext('2d');
   var mask = document.createElement('canvas'); mask.width = W; mask.height = H;
   var mctx = mask.getContext('2d');
-  var colourImg = new Image();
+  var colourImg = null;
   var ready = false;
 
   function ease(p) { return 1 - Math.pow(1 - p, 3); }
@@ -406,6 +409,14 @@
 
   /* ---------- Meter, markers, list ---------- */
   function updateMeter() {
+    if (view === 'map') {
+      var total = 0, got = 0, rooms = 0;
+      ROOMS.forEach(function (r) { total += r.hotspots.length; got += roomCount(r); if (roomDone(r)) rooms++; });
+      $('stageName').textContent = 'The whole world';
+      $('count').textContent = rooms + ' of ' + ROOMS.length + ' rooms restored';
+      $('barFill').style.width = (got / total * 100) + '%';
+      return;
+    }
     var n = restored.size, si = stageIndex(n);
     $('stageName').textContent = STAGES[si].name;
     $('count').textContent = n + ' of ' + HOTSPOTS.length + ' restored';
@@ -417,34 +428,55 @@
 
   function pct(v, total) { return (v / total * 100) + '%'; }
 
+  // markers are created once and only have their state changed, so their animations never restart
+  var markers = {};
+
   function renderOverlay() {
-    overlay.textContent = '';
-    if (cast && !cast.finished) {
-      var h = cast.h;
-      if (h.full) {
-        var r = document.createElement('div'); r.className = 'ring full'; overlay.appendChild(r);
-      } else {
-        h.shapes.forEach(function (s) {
-          var r = document.createElement('div'); r.className = 'ring';
-          r.style.left = pct(s[0], W); r.style.top = pct(s[1], H);
-          r.style.width = pct(s[2] * 1.3, W); r.style.height = pct(s[3] * 1.3, H);
-          overlay.appendChild(r);
-        });
-      }
-      return;
-    }
+    var casting = cast && !cast.finished;
     HOTSPOTS.forEach(function (h) {
-      if (restored.has(h.id) || lockLeft(h) > 0) return;
-      var m = document.createElement('button');
-      m.type = 'button'; m.className = 'marker'; m.setAttribute('data-kind', h.kind);
-      m.setAttribute('aria-label', 'Cast ' + h.name + ', ' + h.sums + (h.sums === 1 ? ' sum' : ' sums'));
-      m.title = h.name;
-      var x = h.full ? 704 : h.shapes[0][0], y = h.full ? 70 : h.shapes[0][1];
-      m.style.left = pct(x, W); m.style.top = pct(y, H);
-      m.addEventListener('click', function () { startSpell(h.id); });
-      overlay.appendChild(m);
+      var m = markers[h.id];
+      var show = !restored.has(h.id) && lockLeft(h) <= 0;
+      if (!show) {
+        if (m && !m.gone) {
+          m.gone = true; m.classList.add('gone'); m.classList.remove('current');
+          setTimeout(function () { if (m.gone && m.parentNode) m.parentNode.removeChild(m); delete markers[h.id]; }, 900);
+        }
+        return;
+      }
+      if (m && m.gone) { m.gone = false; m.classList.remove('gone'); }
+      if (!m) {
+        m = markers[h.id] = document.createElement('button');
+        m.type = 'button'; m.className = 'marker'; m.setAttribute('data-kind', h.kind);
+        m.setAttribute('aria-label', 'Cast ' + h.name + ', ' + h.sums + (h.sums === 1 ? ' sum' : ' sums'));
+        m.title = h.name;
+        var x = h.full ? 704 : h.shapes[0][0], y = h.full ? 70 : h.shapes[0][1];
+        m.style.left = pct(x, W); m.style.top = pct(y, H);
+        m.innerHTML = '<span class="dot"></span><span class="star"><svg viewBox="-50 -50 100 100" aria-hidden="true"><defs><radialGradient id="starHalo"><stop offset="0" stop-color="currentColor" stop-opacity="0.55"/><stop offset="0.45" stop-color="currentColor" stop-opacity="0.18"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></radialGradient><radialGradient id="starCore"><stop offset="0" stop-color="#fffdf0"/><stop offset="0.5" stop-color="#fff3c4"/><stop offset="1" stop-color="currentColor"/></radialGradient></defs><circle r="50" fill="url(#starHalo)"/><path class="rays" d="M0,-44 Q4,-4 44,0 Q4,4 0,44 Q-4,4 -44,0 Q-4,-4 0,-44Z"/><path class="rays small" d="M0,-26 Q3,-3 26,0 Q3,3 0,26 Q-3,3 -26,0 Q-3,-3 0,-26Z" transform="rotate(45)"/><circle r="8" fill="url(#starCore)"/></svg></span>';
+        m.addEventListener('click', function () { if (!(cast && !cast.finished)) startSpell(h.id); });
+        overlay.appendChild(m);
+        void m.offsetWidth;
+      }
+      m.classList.toggle('other', !!casting && cast.h !== h);
+      m.classList.toggle('current', !!casting && cast.h === h);
+      m.tabIndex = casting ? -1 : 0;
     });
   }
+
+  var DIM_KEY = 'mm_dim';
+  var dim = store.get(DIM_KEY, { other: 35, current: 100 });
+  function applyDim() {
+    overlay.style.setProperty('--other', dim.other / 100);
+    overlay.style.setProperty('--current', dim.current / 100);
+  }
+  ['other', 'current'].forEach(function (k) {
+    var el = $('dim-' + k);
+    el.value = dim[k]; $('dimv-' + k).textContent = dim[k] + '%';
+    el.addEventListener('input', function () {
+      dim[k] = +el.value; $('dimv-' + k).textContent = dim[k] + '%';
+      applyDim(); store.set(DIM_KEY, dim);
+    });
+  });
+  applyDim();
 
   function renderChips() {
     var box = $('chips'); box.textContent = '';
@@ -501,7 +533,7 @@
   function say(text) { $('guide').textContent = text; }
   function idleGuide() {
     var n = restored.size;
-    if (n === 0) say('Hello, I’m Pip! Everything has gone grey and cold. Pick a spell and cast it with your maths to bring it back to life.');
+    if (n === 0) say(ROOM.intro || 'Hello, I’m Pip! Everything has gone grey and cold. Pick a spell and cast it with your maths to bring it back to life.');
     else if (n >= HOTSPOTS.length) say('The whole room is alive again. Thank you!');
     else say('What shall we wake up next?');
   }
@@ -697,7 +729,9 @@
     updateMeter();
     if (quiet) return;
     var nx = nextSuggestion();
-    say(h.line + (after !== before ? ' ' + STAGES[after].msg : ''));
+    var opened = restored.size >= HOTSPOTS.length ? ROOMS.filter(function (r) { return r.requires === ROOM.id; }) : [];
+    if (opened.length) mapMsg = 'A new room has opened: ' + opened.map(function (r) { return r.title; }).join(' and ') + '!';
+    say(h.line + (after !== before ? ' ' + STAGES[after].msg : '') + (opened.length ? ' A new room has opened on the map!' : ''));
     if (nx) {
       // go straight to the next spell's first sum, so the panel never flashes the done card or the spell list
       var tk = cast;
@@ -710,6 +744,12 @@
     var b2 = document.createElement('button'); b2.type = 'button'; b2.className = 'btn';
     b2.textContent = 'Back to the room';
     b2.addEventListener('click', function () { idleGuide(); showIdle(); });
+    if (restored.size >= HOTSPOTS.length) {
+      var b3 = document.createElement('button'); b3.type = 'button'; b3.className = 'btn primary';
+      b3.textContent = 'To the world map';
+      b3.addEventListener('click', function () { showMap(); });
+      box.appendChild(b3);
+    }
     box.appendChild(b2);
     renderOverlay();
   }
@@ -799,34 +839,101 @@
     render(); drawFx(); updateMeter(); idleGuide(); showIdle();
   });
 
-  /* ---------- Start ---------- */
-  function buildRoomPicker() {
-    var box = $('rooms');
-    if (ROOMS.length < 2) { box.hidden = true; return; }
-    ROOMS.forEach(function (r) {
-      var done = new Set(store.get(progressKey(r.id), [])).size;
-      var b = document.createElement('button');
-      b.type = 'button'; b.className = 'room-btn';
-      if (r.id === ROOM.id) { b.classList.add('on'); b.setAttribute('aria-current', 'true'); }
-      b.innerHTML = '<span></span><small></small>';
-      b.firstChild.textContent = r.title;
-      b.lastChild.textContent = done + ' of ' + r.hotspots.length;
-      b.addEventListener('click', function () {
-        if (r.id === ROOM.id) return;
-        store.set('mm_room', r.id); location.reload();
+  /* ---------- World map ---------- */
+  function mapTall() { return window.innerWidth < 640; }
+  // default layout: a zigzag path across the map (down it on phones); a room.json "map" [x, y] overrides it
+  function nodePos(r, i) {
+    var n = ROOMS.length, tall = mapTall();
+    if (r.map && !tall) return r.map;
+    if (tall) return [i % 2 ? 70 : 30, (i + 0.5) / n * 100];
+    return [n < 2 ? 50 : 12 + 76 * i / (n - 1), i % 2 ? 68 : 34];
+  }
+  function renderMap() {
+    var map = $('map'), paths = $('mapPaths'), tall = mapTall();
+    [].slice.call(map.querySelectorAll('.node')).forEach(function (n) { map.removeChild(n); });
+    paths.textContent = '';
+    map.classList.toggle('tall', tall);
+    map.style.height = tall ? (ROOMS.length * 180) + 'px' : '';
+    var pos = {};
+    ROOMS.forEach(function (r, i) { pos[r.id] = nodePos(r, i); });
+    ROOMS.forEach(function (r, i) {
+      var open = isUnlocked(r), done = roomDone(r), got = roomCount(r), total = r.hotspots.length;
+      if (r.requires && pos[r.requires]) {
+        var a = pos[r.requires], b = pos[r.id];
+        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M' + a[0] + ' ' + a[1] + ' Q' + ((a[0] + b[0]) / 2) + ' ' + ((a[1] + b[1]) / 2 + (i % 2 ? 14 : -14)) + ' ' + b[0] + ' ' + b[1]);
+        if (open) path.setAttribute('class', 'open');
+        paths.appendChild(path);
+      }
+      var node = document.createElement('button');
+      node.type = 'button';
+      node.className = 'node ' + (done ? 'done' : open ? 'open' : 'locked');
+      node.style.left = pos[r.id][0] + '%'; node.style.top = pos[r.id][1] + '%';
+      var pic = document.createElement('span'); pic.className = 'pic';
+      pic.style.backgroundImage = 'url("' + r.img + '")';
+      if (open) pic.style.filter = 'grayscale(' + (1 - got / total) + ') brightness(' + (0.7 + 0.3 * got / total) + ')';
+      var name = document.createElement('span'); name.className = 'name'; name.textContent = r.title;
+      var info = document.createElement('span'); info.className = 'info';
+      var need = r.requires && roomById(r.requires);
+      info.textContent = !open ? 'Finish ' + need.title + ' first' : done ? 'Restored' : got + ' of ' + total;
+      node.appendChild(pic); node.appendChild(name); node.appendChild(info);
+      if (!open) node.setAttribute('aria-disabled', 'true');
+      node.addEventListener('click', function () {
+        if (!open) { $('mapGuide').textContent = 'This room is still asleep. Finish the ' + need.title + ' first and it will open.'; return; }
+        enterRoom(r);
       });
-      box.appendChild(b);
+      map.appendChild(node);
     });
   }
+  function mapGuide() {
+    var any = ROOMS.some(function (r) { return roomCount(r) > 0; });
+    var all = ROOMS.every(roomDone);
+    var text = mapMsg || (all ? 'Every room is awake again. You did it!'
+      : any ? 'Where shall we go next?'
+      : 'Welcome to the tree! Pick a room to begin. Finish a room and the next one opens.');
+    mapMsg = '';
+    $('mapGuide').textContent = text;
+  }
+  function showMap() {
+    if (view === 'room' && ROOM) {
+      if (cast && cast.completing && !cast.finished) finishSpell(true);
+      cast = null; sfxClear(); anims = []; particles = [];
+      document.body.classList.remove('casting');
+    }
+    view = 'map';
+    $('roomView').hidden = true; $('mapView').hidden = false;
+    $('roomName').textContent = 'World map';
+    renderMap(); mapGuide(); updateMeter();
+    window.scrollTo(0, 0);
+  }
+  function enterRoom(r) {
+    ROOM = r; HOTSPOTS = r.hotspots; RESTORED_KEY = progressKey(r.id);
+    restored = new Set(store.get(RESTORED_KEY, []));
+    prog = {}; HOTSPOTS.forEach(function (h) { prog[h.id] = restored.has(h.id) ? 1 : 0; });
+    anims = []; particles = []; cast = null; sfxClear();
+    overlay.textContent = ''; markers = {};
+    view = 'room';
+    $('mapView').hidden = true; $('roomView').hidden = false;
+    $('roomName').textContent = r.title;
+    ready = false;
+    grey.alt = r.alt; grey.src = r.img;
+    var img = colourImg = new Image();
+    img.onload = function () { if (colourImg === img) { ready = true; render(); drawFx(); } };
+    img.src = r.img;
+    updateMeter(); idleGuide(); showIdle();
+    window.scrollTo(0, 0);
+  }
+  $('mapBtn').addEventListener('click', showMap);
+  var wasTall = mapTall();
+  window.addEventListener('resize', function () {
+    if (mapTall() !== wasTall) { wasTall = mapTall(); if (view === 'map') renderMap(); }
+  });
 
+  /* ---------- Start ---------- */
   function boot() {
     sfxInit();
-    grey.alt = ROOM.alt; grey.src = ROOM.img;
-    $('roomName').textContent = ROOM.title;
-    buildRoomPicker();
-    colourImg.onload = function () { ready = true; render(); };
-    colourImg.src = grey.src;
-    buildKeypad(); renderChips(); updateMeter(); idleGuide(); showIdle();
+    buildKeypad(); renderChips();
+    showMap();
   }
   boot();
 })();
