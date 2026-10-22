@@ -342,6 +342,12 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
 .map-back { align-self: flex-start; background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; min-height: 44px; padding: 6px 16px; font-family: var(--font-display); margin-bottom: 14px; }
 .map-back:hover { border-color: #e8c66a; }
 
+.idle-note { margin: 0; padding: 24px 8px; text-align: center; font-family: var(--font-display); font-size: 1.15rem; color: var(--brown-soft); }
+.cast-type { margin: -4px 0 12px; text-align: center; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #a8741a; }
+.cast-type.incantation { color: #1f7f6d; }
+.cast-type.ritual, .cast-type.finale { color: #7a45ad; }
+.tools-h { margin: 14px 0 6px; font-size: 0.9rem; font-weight: 800; }
+
 </style>
 
 <main class="app">
@@ -402,21 +408,19 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
           <canvas id="fx" width="1408" height="768"></canvas>
           <div class="overlay" id="overlay"></div>
         </div>
-        <p class="caption">Tap a glowing light in the room, or pick a spell from the spellbook.</p>
+        <p class="caption">Tap a glowing light in the room.</p>
       </section>
     </div>
 
     <aside class="panel" id="panel">
       <div id="viewIdle">
-        <h2 class="book-title">Spellbook</h2>
-        <p class="label">Tables to practise</p>
-        <div class="chips" id="chips" role="group" aria-label="Times tables to practise"></div>
-        <div class="spells" id="spells"></div>
+        <p class="idle-note">Tap a glowing light in the room to cast its spell.</p>
       </div>
 
       <div id="viewCast" hidden>
-        <button class="back" id="backBtn" data-nav="1" type="button">&larr; Spells</button>
+        <button class="back" id="backBtn" data-nav="1" type="button">&larr; Back to the room</button>
         <h2 class="cast-title" id="castName"></h2>
+        <p class="cast-type" id="castType"></p>
         <div class="pips" id="pips" role="img" aria-label="Sums cast so far"><div class="chain" id="chain"></div></div>
         <div id="castBody">
           <div class="q" id="q"><span id="qText"></span> = <span class="ans" id="ans">?</span></div>
@@ -432,6 +436,10 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
 
   <details class="tools">
     <summary>Prototype tools</summary>
+    <h3 class="tools-h">Tables to practise</h3>
+    <div class="chips" id="chips" role="group" aria-label="Times tables to practise"></div>
+    <h3 class="tools-h">Spellbook</h3>
+    <div class="spells" id="spells"></div>
     <div class="dims">
       <label>Other fairies while casting <input type="range" id="dim-other" min="0" max="100" step="5"><output id="dimv-other"></output></label>
       <label>Fairy being cast <input type="range" id="dim-current" min="0" max="100" step="5"><output id="dimv-current"></output></label>
@@ -1109,6 +1117,9 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
     document.body.classList.add('casting');
     $('viewIdle').hidden = true; $('viewCast').hidden = false;
     $('castName').textContent = h.name;
+    var g = GROUPS.filter(function (x) { return x[0] === h.kind; })[0];
+    $('castType').textContent = g ? (h.kind === 'finale' ? 'Finale' : g[1].replace(/s$/, '')) : '';
+    $('castType').className = 'cast-type ' + h.kind;
     $('castBody').hidden = false; $('doneCard').hidden = true;
     if (!keepGuide) say(h.sums === 1 ? 'Just one sum. You can do it!' : h.sums + ' sums to cast this spell.');
     renderPips(); renderOverlay(); showQuestion();
