@@ -24,4 +24,4 @@ A web game where times-table sums cast spells that bring a grey room to life. Re
 2. Create `rooms/<name>/` with `room.jpg`, `hotspots.json` (same format as the bedroom) and `room.json`.
 3. Run `python3 build.py`. The room appears on the world map.
 
-`room.json` fields (all optional): `title`, `order` (position on the map and in the sequence), `blurb`, `intro` (Pip's first line in the room), `requires` (id of the room that must be finished first; none means open from the start), `map` (`[x, y]` percentages on a wide screen; otherwise rooms zigzag across the map automatically).
+`room.json` fields (all optional): `title`, `order` (position on the map and in the sequence), `blurb`, `intro` (Pip's first line in the room), `requires` (id of the room that must be finished first; none means open from the start). Rooms are placed on the great tree automatically, first room at the bottom.

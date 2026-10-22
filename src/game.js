@@ -21,7 +21,8 @@
   function roomDone(r) { return roomCount(r) >= r.hotspots.length; }
   function roomById(id) { return ROOMS.filter(function (r) { return r.id === id; })[0]; }
   // a room opens when the room it requires is finished (no requirement: always open)
-  function isUnlocked(r) { return !r.requires || roomDone(roomById(r.requires)); }
+  // (a room that already has saved progress stays open)
+  function isUnlocked(r) { return !r.requires || roomDone(roomById(r.requires)) || roomCount(r) > 0; }
   var tables = store.get('mm_tables', [2, 5, 10]);
   var stats = store.get('mm_stats', {});
   var review = [];
@@ -839,58 +840,92 @@
     render(); drawFx(); updateMeter(); idleGuide(); showIdle();
   });
 
-  /* ---------- World map ---------- */
-  function mapTall() { return window.innerWidth < 640; }
-  // default layout: a zigzag path across the map (down it on phones); a room.json "map" [x, y] overrides it
-  function nodePos(r, i) {
-    var n = ROOMS.length, tall = mapTall();
-    if (r.map && !tall) return r.map;
-    if (tall) return [i % 2 ? 70 : 30, (i + 0.5) / n * 100];
-    return [n < 2 ? 50 : 12 + 76 * i / (n - 1), i % 2 ? 68 : 34];
+  /* ---------- World map: one great tree, climbed from the bottom ---------- */
+  var VW = 600, STEP = 210, TOP = 170, BOT = 150;
+  function mapHeight() { return TOP + ROOMS.length * STEP + BOT; }
+  function nodeXY(i) { return [i % 2 ? 450 : 150, mapHeight() - BOT - STEP * (i + 0.5)]; }
+  function treeSvg(open) {
+    var H = mapHeight(), o = '';
+    // sky: moon and stars
+    for (var k = 0; k < 46; k++) {
+      var sx = (k * 137.5) % VW, sy = (k * 61.8 * 3.1) % (H * 0.8);
+      o += '<circle class="star" cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" r="' + (0.8 + (k % 3) * 0.5) + '" style="animation-delay:' + (k % 7) * 0.6 + 's"/>';
+    }
+    o += '<circle cx="500" cy="70" r="30" fill="#f6efd2" opacity="0.95"/><circle cx="512" cy="64" r="28" fill="#253b5e"/>';
+    // trunk
+    var L = [], R = [], y;
+    for (y = H - BOT + 20; y >= TOP - 30; y -= 40) {
+      L.push([255 + 8 * Math.sin(y / 47), y]); R.push([345 + 8 * Math.sin(y / 53 + 1), y]);
+    }
+    var b = H - BOT + 55;
+    var d = 'M150 ' + (b + 30) + ' Q250 ' + b + ' ' + L[0][0] + ' ' + L[0][1];
+    L.forEach(function (p) { d += ' L' + p[0].toFixed(1) + ' ' + p[1]; });
+    R.reverse().forEach(function (p) { d += ' L' + p[0].toFixed(1) + ' ' + p[1]; });
+    d += ' Q350 ' + b + ' 450 ' + (b + 30) + ' Z';
+    o += '<path d="' + d + '" fill="url(#bark)"/>';
+    for (k = 0; k < 7; k++) {
+      var bx = 268 + k * 11;
+      o += '<path d="M' + bx + ' ' + (H - BOT + 30) + ' L' + (bx + (k % 2 ? 4 : -4)) + ' ' + (TOP + 10) + '" stroke="#2a1d12" stroke-width="2" opacity="0.35" fill="none"/>';
+    }
+    // branches to each room
+    ROOMS.forEach(function (r, i) {
+      var p = nodeXY(i), side = p[0] < 300 ? -1 : 1, by = p[1] + 50;
+      var dd = 'M300 ' + (by + 20) + ' Q' + (300 + side * 70) + ' ' + (by + 14) + ' ' + p[0] + ' ' + p[1];
+      o += '<path d="' + dd + '" stroke="#5b3f27" stroke-width="30" stroke-linecap="round" fill="none"/>';
+      o += '<path d="' + dd + '" stroke="#7a5535" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/>';
+      if (open[r.id]) o += '<path class="lights" d="' + dd + '" fill="none"/>';
+    });
+    // canopy
+    [[90, 80, 90, 70], [210, 60, 100, 70], [330, 50, 110, 75], [450, 75, 100, 70], [545, 100, 70, 60], [300, 120, 150, 60], [60, 140, 60, 50], [540, 160, 60, 50]].forEach(function (c, n) {
+      o += '<ellipse cx="' + c[0] + '" cy="' + c[1] + '" rx="' + c[2] + '" ry="' + c[3] + '" fill="' + (n % 2 ? '#1c4a39' : '#173a2e') + '"/>';
+    });
+    for (k = 0; k < 14; k++) {
+      o += '<circle class="star warm" cx="' + (40 + (k * 83) % 520) + '" cy="' + (60 + (k * 47) % 110) + '" r="3" style="animation-delay:' + (k % 5) * 0.5 + 's"/>';
+    }
+    // forest floor
+    o += '<ellipse cx="300" cy="' + (H - 10) + '" rx="420" ry="' + (BOT - 40) + '" fill="#1a2c3d"/>';
+    o += '<ellipse cx="300" cy="' + (H - 20) + '" rx="300" ry="' + (BOT - 70) + '" fill="#223a4c"/>';
+    return '<defs><linearGradient id="bark" x1="0" x2="1"><stop offset="0" stop-color="#34251a"/><stop offset="0.5" stop-color="#6a4a2e"/><stop offset="1" stop-color="#34251a"/></linearGradient></defs>' + o;
   }
   function renderMap() {
-    var map = $('map'), paths = $('mapPaths'), tall = mapTall();
+    var map = $('map');
     [].slice.call(map.querySelectorAll('.node')).forEach(function (n) { map.removeChild(n); });
-    paths.textContent = '';
-    map.classList.toggle('tall', tall);
-    map.style.height = tall ? (ROOMS.length * 180) + 'px' : '';
-    var pos = {};
-    ROOMS.forEach(function (r, i) { pos[r.id] = nodePos(r, i); });
+    var H = mapHeight(), open = {};
+    ROOMS.forEach(function (r) { open[r.id] = isUnlocked(r); });
+    map.style.aspectRatio = VW + ' / ' + H;
+    $('mapTree').setAttribute('viewBox', '0 0 ' + VW + ' ' + H);
+    $('mapTree').innerHTML = treeSvg(open);
     ROOMS.forEach(function (r, i) {
-      var open = isUnlocked(r), done = roomDone(r), got = roomCount(r), total = r.hotspots.length;
-      if (r.requires && pos[r.requires]) {
-        var a = pos[r.requires], b = pos[r.id];
-        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M' + a[0] + ' ' + a[1] + ' Q' + ((a[0] + b[0]) / 2) + ' ' + ((a[1] + b[1]) / 2 + (i % 2 ? 14 : -14)) + ' ' + b[0] + ' ' + b[1]);
-        if (open) path.setAttribute('class', 'open');
-        paths.appendChild(path);
-      }
+      var isOpen = open[r.id], done = roomDone(r), got = roomCount(r), total = r.hotspots.length, xy = nodeXY(i);
       var node = document.createElement('button');
       node.type = 'button';
-      node.className = 'node ' + (done ? 'done' : open ? 'open' : 'locked');
-      node.style.left = pos[r.id][0] + '%'; node.style.top = pos[r.id][1] + '%';
+      node.className = 'node ' + (!isOpen ? 'locked' : done ? 'done' : 'open');
+      node.style.left = (xy[0] / VW * 100) + '%'; node.style.top = (xy[1] / H * 100) + '%';
       var pic = document.createElement('span'); pic.className = 'pic';
       pic.style.backgroundImage = 'url("' + r.img + '")';
-      if (open) pic.style.filter = 'grayscale(' + (1 - got / total) + ') brightness(' + (0.7 + 0.3 * got / total) + ')';
+      if (isOpen) pic.style.filter = 'grayscale(' + (0.5 * (1 - got / total)) + ') saturate(1.1)';
       var name = document.createElement('span'); name.className = 'name'; name.textContent = r.title;
       var info = document.createElement('span'); info.className = 'info';
-      var need = r.requires && roomById(r.requires);
-      info.textContent = !open ? 'Finish ' + need.title + ' first' : done ? 'Restored' : got + ' of ' + total;
+      info.textContent = !isOpen ? 'Locked' : done ? 'Restored' : got === 0 ? 'Tap to enter' : got + ' of ' + total + ' restored';
       node.appendChild(pic); node.appendChild(name); node.appendChild(info);
-      if (!open) node.setAttribute('aria-disabled', 'true');
+      var need = r.requires && roomById(r.requires);
+      node.setAttribute('aria-label', r.title + ', ' + (!isOpen ? 'locked. Finish the ' + need.title + ' first' : done ? 'restored' : got + ' of ' + total + ' restored'));
+      if (!isOpen) node.setAttribute('aria-disabled', 'true');
       node.addEventListener('click', function () {
-        if (!open) { $('mapGuide').textContent = 'This room is still asleep. Finish the ' + need.title + ' first and it will open.'; return; }
+        if (!isOpen) { $('mapGuide').textContent = 'This room is still asleep. Wake up the ' + need.title + ' first and it will open.'; return; }
         enterRoom(r);
       });
       map.appendChild(node);
     });
   }
+  function nextRooms() { return ROOMS.filter(function (r) { return isUnlocked(r) && !roomDone(r); }); }
   function mapGuide() {
     var any = ROOMS.some(function (r) { return roomCount(r) > 0; });
-    var all = ROOMS.every(roomDone);
-    var text = mapMsg || (all ? 'Every room is awake again. You did it!'
-      : any ? 'Where shall we go next?'
-      : 'Welcome to the tree! Pick a room to begin. Finish a room and the next one opens.');
+    var next = nextRooms();
+    var text = mapMsg || (!next.length ? 'Every room is awake again. You did it!'
+      : !any ? 'Welcome to the great tree! Tap the glowing window to begin. Finish a room and the next one opens.'
+      : next.length === 1 ? 'Next up: the ' + next[0].title + '. Tap the glowing window to go in.'
+      : 'Which room shall we wake up? Tap a glowing window.');
     mapMsg = '';
     $('mapGuide').textContent = text;
   }
@@ -904,7 +939,9 @@
     $('roomView').hidden = true; $('mapView').hidden = false;
     $('roomName').textContent = 'World map';
     renderMap(); mapGuide(); updateMeter();
-    window.scrollTo(0, 0);
+    var focus = nextRooms()[0], el = focus && $('map').querySelectorAll('.node')[ROOMS.indexOf(focus)];
+    if (el && el.scrollIntoView) el.scrollIntoView({ block: 'center' });
+    else window.scrollTo(0, 0);
   }
   function enterRoom(r) {
     ROOM = r; HOTSPOTS = r.hotspots; RESTORED_KEY = progressKey(r.id);
@@ -924,9 +961,17 @@
     window.scrollTo(0, 0);
   }
   $('mapBtn').addEventListener('click', showMap);
-  var wasTall = mapTall();
-  window.addEventListener('resize', function () {
-    if (mapTall() !== wasTall) { wasTall = mapTall(); if (view === 'map') renderMap(); }
+  var resetAllArmed = false, resetAllTimer = 0;
+  $('resetAllBtn').addEventListener('click', function () {
+    var b = $('resetAllBtn');
+    if (!resetAllArmed) {
+      resetAllArmed = true; b.textContent = 'Tap again to reset every room';
+      resetAllTimer = setTimeout(function () { resetAllArmed = false; b.textContent = 'Reset all progress'; }, 3000);
+      return;
+    }
+    clearTimeout(resetAllTimer); resetAllArmed = false; b.textContent = 'Reset all progress';
+    ROOMS.forEach(function (r) { store.set(progressKey(r.id), []); });
+    mapMsg = ''; renderMap(); mapGuide(); updateMeter();
   });
 
   /* ---------- Start ---------- */

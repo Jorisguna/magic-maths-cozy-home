@@ -18,6 +18,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { background: var(--ink); }
 body {
   background: var(--ink);
@@ -303,25 +304,34 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
   .pip, .pip.on, .pip.next, .pip.pop, .pip.pop::after, .pip.on .shine, .chain.allpulse .pip { animation: none; }
   .pip .well, .chain::after { transition: none; }
 }
-/* World map: rooms are nodes joined by a winding path */
+/* World map: one great tree, climbed from the bottom; each room is a window in it */
 .world { display: flex; flex-direction: column; gap: 10px; }
-.map { position: relative; aspect-ratio: 16 / 9; min-height: 340px; border-radius: 18px; border: 1px solid var(--line); overflow: hidden;
-  background: radial-gradient(ellipse at 50% 40%, #2f4a4a 0%, #1f2a3c 55%, #171a2b 100%); }
-.map.tall { aspect-ratio: auto; min-height: 0; }
-.map-paths { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.map-paths path { fill: none; stroke: rgba(255, 214, 120, 0.35); stroke-width: 3; stroke-dasharray: 2 9; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.map-paths path.open { stroke: rgba(255, 214, 120, 0.85); }
-.node { position: absolute; transform: translate(-50%, -50%); width: clamp(92px, 15vw, 150px); display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0; background: none; border: 0; text-align: center; }
-.node .pic { width: 100%; aspect-ratio: 1; border-radius: 50%; background-size: cover; background-position: center; border: 3px solid #5a4d7c; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5); position: relative; transition: transform 0.2s, box-shadow 0.2s; }
-.node .name { font-family: var(--font-display); font-size: 1rem; line-height: 1.15; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8); }
-.node .info { font-size: 0.78rem; color: var(--muted); text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8); }
-.node:not(:disabled):hover .pic { transform: scale(1.06); }
-.node.open .pic { border-color: #e8c66a; box-shadow: 0 0 0 4px rgba(232, 198, 106, 0.25), 0 0 26px rgba(255, 200, 90, 0.5); }
-.node.done .pic { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(98, 227, 201, 0.22), 0 0 22px rgba(98, 227, 201, 0.45); }
-.node.done .pic::after { content: "\2713"; position: absolute; right: -2px; bottom: -2px; width: 30px; height: 30px; border-radius: 50%; background: var(--teal); color: #08352c; display: grid; place-items: center; font-weight: 800; }
+.world .guide-bar { position: sticky; top: 0; z-index: 5; background: var(--ink); padding: 8px 0; }
+.map { position: relative; width: 100%; max-width: 640px; margin: 0 auto; border-radius: 18px; overflow: hidden; border: 1px solid var(--line);
+  background: linear-gradient(#2a4166 0%, #34567a 45%, #2c4d5f 100%); }
+.map-tree { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map-tree .star { fill: #fff; opacity: 0.55; animation: twinkle 4s ease-in-out infinite; }
+.map-tree .star.warm { fill: #ffd678; opacity: 0.9; }
+.map-tree .lights { stroke: #ffd678; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 0.1 16; filter: drop-shadow(0 0 4px #ffc65c); animation: twinkle 3s ease-in-out infinite; }
+@keyframes twinkle { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+.node { position: absolute; transform: translate(-50%, -50%); width: 25%; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; background: none; border: 0; text-align: center; }
+.node .pic { width: 100%; aspect-ratio: 1; border-radius: 50%; background-size: cover; background-position: center; border: 4px solid #5b3f27; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55); position: relative; transition: transform 0.2s; }
+.node .name, .node .info { width: 160%; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9); }
+.node .name { font-family: var(--font-display); font-size: clamp(0.85rem, 2.6vw, 1.1rem); line-height: 1.15; }
+.node .info { font-size: clamp(0.7rem, 2vw, 0.8rem); color: var(--muted); }
+.node:not(.locked):hover .pic { transform: scale(1.06); }
+.node.open::before { content: ""; position: absolute; left: -35%; top: -35%; width: 170%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255, 205, 100, 0.5), rgba(255, 205, 100, 0) 65%); pointer-events: none; z-index: -1; }
+.node.open .pic { border-color: #ffd678; animation: beckon 2.4s ease-in-out infinite; }
+.node.open .info { color: #1b1305; background: #ffd678; border-radius: 99px; padding: 2px 12px; width: auto; font-weight: 800; text-shadow: none; }
+@keyframes beckon { 0%, 100% { box-shadow: 0 0 0 3px rgba(255, 214, 120, 0.25), 0 0 18px rgba(255, 200, 90, 0.45); } 50% { box-shadow: 0 0 0 8px rgba(255, 214, 120, 0.2), 0 0 36px rgba(255, 200, 90, 0.85); } }
+.node.done .pic { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(98, 227, 201, 0.2); }
+.node.done .info { color: var(--teal); }
+.node.done .pic::after { content: "\2713"; position: absolute; right: -2px; bottom: -2px; width: 28px; height: 28px; border-radius: 50%; background: var(--teal); color: #08352c; display: grid; place-items: center; font-weight: 800; }
 .node.locked { cursor: default; }
-.node.locked .pic { filter: grayscale(1) brightness(0.45); border-color: #3b3259; }
-.node.locked .pic::after { content: "\1F512"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 1.8rem; }
+.node.locked .pic { filter: grayscale(1) brightness(0.5); border-color: #2c2230; }
+.node.locked .pic::after { content: "\1F512"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 1.6rem; filter: none; }
 .node.locked .name { color: var(--muted); }
+.map-reset { align-self: center; background: none; border: 1px solid var(--line); border-radius: 10px; padding: 6px 14px; color: var(--muted); font-size: 0.8rem; }
+@media (prefers-reduced-motion: reduce) { .node.open .pic, .map-tree .star, .map-tree .lights { animation: none; } }
 .map-back { align-self: flex-start; background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; min-height: 44px; padding: 6px 16px; font-family: var(--font-display); margin-bottom: 14px; }
 .map-back:hover { border-color: #e8c66a; }
