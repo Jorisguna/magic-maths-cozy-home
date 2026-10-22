@@ -436,6 +436,7 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
       <label>Fairy being cast <input type="range" id="dim-current" min="0" max="100" step="5"><output id="dimv-current"></output></label>
     </div>
     <div class="row">
+      <button id="autoBtn" type="button" aria-pressed="false">Auto-answer: off</button>
       <button id="hintBtn" type="button">Show the answer</button>
       <button id="allBtn" type="button">Preview the finished room</button>
       <button id="resetBtn" type="button">Reset the room</button>
@@ -1080,6 +1081,18 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
     var an = $('ans'); an.textContent = '?'; an.className = 'ans';
     $('q').classList.remove('fizz');
     cast.busy = false; setKeys(true);
+    autoSolve();
+  }
+  /* Testing aid: when on, every question answers itself so a whole spell can be run through quickly */
+  var autoOn = false;
+  function autoSolve() {
+    if (!autoOn || !cast) return;
+    var tk = cast, q = cast.q;
+    setTimeout(function () {
+      if (!autoOn || cast !== tk || tk.q !== q || tk.busy || tk.finished) return;
+      setAnswerInstant(String(q.ans));
+      submit();
+    }, 350);
   }
   function setKeys(on) {
     var ks = document.querySelectorAll('#keypad .key');
@@ -1263,6 +1276,12 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
   $('hintBtn').addEventListener('click', function () {
     if (!cast || cast.busy || cast.finished) return;
     setAnswerInstant(String(cast.q.ans));
+  });
+  $('autoBtn').addEventListener('click', function () {
+    autoOn = !autoOn;
+    this.textContent = 'Auto-answer: ' + (autoOn ? 'on' : 'off');
+    this.setAttribute('aria-pressed', autoOn);
+    if (autoOn && cast && !cast.busy && !cast.finished) autoSolve();
   });
   $('allBtn').addEventListener('click', function () {
     var i = 0;
