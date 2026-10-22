@@ -1,0 +1,345 @@
+[
+ {
+  "id": "paper-lantern",
+  "name": "Paper lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    596,
+    102,
+    25,
+    26
+   ]
+  ],
+  "line": "The paper lantern glows softly."
+ },
+ {
+  "id": "pink-star",
+  "name": "Pink star lamp",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    647,
+    143,
+    35,
+    34
+   ]
+  ],
+  "line": "The pink star lights up."
+ },
+ {
+  "id": "gold-star",
+  "name": "Golden star lamp",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    709,
+    158,
+    31,
+    34
+   ]
+  ],
+  "line": "The golden star shines bright."
+ },
+ {
+  "id": "moons",
+  "name": "Moon lamps",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    767,
+    127,
+    31,
+    38
+   ],
+   [
+    815,
+    98,
+    20,
+    22
+   ]
+  ],
+  "line": "The little moons glow silver."
+ },
+ {
+  "id": "lantern-d",
+  "name": "Doorway lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    1209,
+    298,
+    35,
+    52
+   ]
+  ],
+  "line": "A lantern lights the path outside."
+ },
+ {
+  "id": "lantern-s",
+  "name": "Little lantern",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    133,
+    562,
+    35,
+    45
+   ]
+  ],
+  "line": "The little lantern flickers awake."
+ },
+ {
+  "id": "bunting",
+  "name": "Bunting flags",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    984,
+    195,
+    49,
+    32
+   ]
+  ],
+  "line": "The flags flutter in bright colours."
+ },
+ {
+  "id": "toy-dragon",
+  "name": "Toy dragon",
+  "kind": "spark",
+  "sums": 1,
+  "shapes": [
+   [
+    921,
+    612,
+    33,
+    32
+   ]
+  ],
+  "line": "The little green dragon wiggles his tail."
+ },
+ {
+  "id": "owl",
+  "name": "Sleeping owl",
+  "kind": "incantation",
+  "sums": 4,
+  "shapes": [
+   [
+    1087,
+    420,
+    49,
+    78
+   ]
+  ],
+  "line": "The owl hoots softly in its sleep."
+ },
+ {
+  "id": "cat",
+  "name": "Sleeping cat",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    305,
+    588,
+    56,
+    35
+   ]
+  ],
+  "line": "The cat purrs in its sleep."
+ },
+ {
+  "id": "armchair",
+  "name": "Armchair",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    271,
+    565,
+    123,
+    125
+   ]
+  ],
+  "line": "The armchair is warm and cosy again."
+ },
+ {
+  "id": "top-bed",
+  "name": "Top acorn bed",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    512,
+    215,
+    107,
+    125
+   ]
+  ],
+  "line": "The top bunk is snug as a nut."
+ },
+ {
+  "id": "middle-bed",
+  "name": "Middle bed",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    696,
+    350,
+    113,
+    75
+   ]
+  ],
+  "line": "The patchwork quilt glows with colour."
+ },
+ {
+  "id": "bottom-bed",
+  "name": "Bottom bed",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    624,
+    535,
+    123,
+    65
+   ]
+  ],
+  "line": "The bottom bunk is ready for sweet dreams."
+ },
+ {
+  "id": "acorn",
+  "name": "Giant acorn",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    435,
+    485,
+    80,
+    120
+   ]
+  ],
+  "line": "The giant acorn gleams like gold."
+ },
+ {
+  "id": "slide",
+  "name": "Wooden slide",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    849,
+    500,
+    82,
+    130
+   ]
+  ],
+  "line": "The slide shines, ready for a whoosh."
+ },
+ {
+  "id": "horse",
+  "name": "Rocking horse",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    440,
+    675,
+    77,
+    68
+   ]
+  ],
+  "line": "The rocking horse starts to rock."
+ },
+ {
+  "id": "rug",
+  "name": "Round rug",
+  "kind": "incantation",
+  "sums": 3,
+  "shapes": [
+   [
+    716,
+    665,
+    307,
+    80
+   ]
+  ],
+  "line": "The rug spreads out, warm and leafy."
+ },
+ {
+  "id": "treehouse",
+  "name": "Toy treehouse",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    895,
+    190,
+    97,
+    105
+   ]
+  ],
+  "line": "The tiny treehouse lights up, window by window."
+ },
+ {
+  "id": "window",
+  "name": "Round window",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    1003,
+    305,
+    53,
+    52
+   ]
+  ],
+  "line": "The stained glass lights up in every colour."
+ },
+ {
+  "id": "forest",
+  "name": "The forest outside",
+  "kind": "ritual",
+  "sums": 6,
+  "shapes": [
+   [
+    1253,
+    400,
+    87,
+    230
+   ],
+   [
+    113,
+    270,
+    92,
+    180
+   ]
+  ],
+  "line": "The forest outside wakes up, full of fireflies."
+ },
+ {
+  "id": "tree",
+  "name": "The Great Tree",
+  "kind": "finale",
+  "sums": 8,
+  "shapes": [
+   [
+    704,
+    384,
+    0,
+    0
+   ]
+  ],
+  "full": true,
+  "line": "The Great Tree glows, and the whole nursery is alive!"
+ }
+]

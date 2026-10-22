@@ -110,3 +110,4 @@ Whole completion from last answer to the room waking is about 2.4 seconds. This 
 - 0.8 Kitchen added as room 3 (opens after the Library Loft). Map redrawn as one great tree. Fixed a bug where the map stayed visible inside a room.
 - 0.9 Bathroom added as room 4 (opens after the Kitchen).
 - 1.0 Potion Workshop added as room 5 (opens after the Bathroom). Five rooms in all.
+- 1.1 Acorn Nursery added as room 6 (opens after the Potion Workshop).
