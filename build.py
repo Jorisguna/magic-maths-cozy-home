@@ -48,6 +48,7 @@ for r in rooms:
     if r['requires'] and r['requires'] not in ids:
         sys.exit(f"Room {r['id']} requires unknown room {r['requires']}")
 
+css = css.replace('__RUNEPAD__', 'data:image/png;base64,' + base64.b64encode(open(os.path.join(here, 'ui', 'rune-pad.png'), 'rb').read()).decode())
 page = shell.replace('/*__STYLES__*/', css).replace('/*__SCRIPT__*/', js)
 for r in rooms:
     if not r['map']:

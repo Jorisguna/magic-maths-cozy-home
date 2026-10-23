@@ -340,3 +340,72 @@ h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem
 .cast-type.incantation { color: #1f7f6d; }
 .cast-type.ritual, .cast-type.finale { color: #7a45ad; }
 .tools-h { margin: 14px 0 6px; font-size: 0.9rem; font-weight: 800; }
+
+/* ---------- Casting: a night-stone spell screen (the parchment book stays for the idle note) ---------- */
+:root { --rune: #e3c8ff; --rune-glow: rgba(190, 140, 255, 0.85); --stone-1: #6b6c72; --stone-2: #4a4b52; --stone-3: #2f3036; --font-rune: "Uncial Antiqua", var(--font-display); }
+.panel:has(#viewCast:not([hidden])) {
+  color: var(--text); background: none; box-shadow: none; padding: 8px 4px 12px;
+}
+.panel:has(#viewCast:not([hidden]))::before, .panel:has(#viewCast:not([hidden]))::after { display: none; }
+
+#viewCast .back {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 6px 16px; margin-bottom: 6px;
+  border-radius: 12px; border: 1px solid var(--line); background: rgba(42, 35, 64, 0.8); color: var(--text);
+  font-family: var(--font-body); font-weight: 700; font-size: 0.88rem;
+}
+#viewCast .back:hover { border-color: #b995f0; color: #fff; box-shadow: 0 0 12px rgba(180, 130, 255, 0.4); }
+#viewCast .cast-title { color: #f6e7c1; text-shadow: 0 0 14px rgba(255, 205, 110, 0.55), 0 2px 3px rgba(0, 0, 0, 0.6); }
+#viewCast .cast-title::first-letter { color: inherit; text-shadow: inherit; }
+#viewCast .cast-type { color: var(--gold); text-shadow: 0 0 8px rgba(255, 198, 92, 0.5); }
+#viewCast .cast-type.incantation { color: var(--teal); text-shadow: 0 0 8px rgba(98, 227, 201, 0.5); }
+#viewCast .cast-type.ritual, #viewCast .cast-type.finale { color: #d79bff; text-shadow: 0 0 8px rgba(215, 155, 255, 0.55); }
+.chain::before { background: rgba(255, 255, 255, 0.16); }
+.pip .rim { background: linear-gradient(145deg, #8c8a96, #3a3944 60%, #6d6b78); }
+.pip .well { background:
+    conic-gradient(from 20deg at 50% 50%, rgba(255, 255, 255, 0.28), transparent 22%, rgba(0, 0, 0, 0.2) 45%, transparent 62%, rgba(255, 255, 255, 0.22) 82%, rgba(0, 0, 0, 0.12)),
+    linear-gradient(180deg, #1c1a26 0 42%, #2b2838 46%, #ffd877 52%, #ffb83a 70%, #c77a0a 100%);
+  background-size: 100% 100%, 100% 230%; }
+.pip { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8)); }
+@keyframes nextglow { 0%, 100% { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8)); } 50% { filter: drop-shadow(0 0 9px rgba(190, 140, 255, 0.95)); } }
+
+/* The sum floats in a ring of golden light; the answer slot is a glowing rune-well */
+.q {
+  position: relative; padding: 22px 8px; border: 0; border-radius: 0; box-shadow: none; color: #fff6e0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(255, 200, 90, 0.16), transparent 68%);
+  text-shadow: 0 0 18px rgba(255, 210, 120, 0.55), 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+.q::before, .q::after {
+  content: ""; position: absolute; inset: 2px 6px; border-radius: 50%; pointer-events: none;
+  border: 1.5px solid rgba(255, 220, 140, 0.35); box-shadow: 0 0 14px rgba(255, 200, 100, 0.3), inset 0 0 14px rgba(255, 200, 100, 0.15);
+  transform: rotate(-4deg) scale(1.0, 0.92); animation: ringspin 14s linear infinite;
+}
+.q::after { inset: 8px 0; transform: rotate(7deg); border-color: rgba(200, 160, 255, 0.3); animation-duration: 19s; animation-direction: reverse; }
+@keyframes ringspin { to { rotate: 360deg; } }
+.q .ans {
+  color: var(--gold); border: 0; border-radius: 12px; padding: 0 10px; min-width: 3.4ch;
+  background: rgba(10, 8, 20, 0.55); box-shadow: inset 0 0 0 1.5px rgba(255, 198, 92, 0.65), inset 0 0 14px rgba(255, 190, 80, 0.3), 0 0 14px rgba(255, 190, 80, 0.3);
+}
+.q .ans.ok { color: #7ff0b8; box-shadow: inset 0 0 0 1.5px #7ff0b8, 0 0 16px rgba(127, 240, 184, 0.55); }
+.q .ans.miss { color: var(--rose); box-shadow: inset 0 0 0 1.5px var(--rose), 0 0 16px rgba(255, 147, 168, 0.5); }
+
+/* The painted rune slab (ui/rune-pad.png, 381 x 321): its stones and lettering are in the picture; each key is an invisible button over its stone */
+.slab { position: relative; aspect-ratio: 381 / 321; background: url("__RUNEPAD__") 0 0 / 100% 100% no-repeat; filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.6)); }
+.slab-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.slab .keypad { position: absolute; inset: 0; display: block; padding: 0; }
+.slab .key, .slab .key:nth-child(n) {
+  position: absolute; width: 21%; height: 15.6%; min-height: 0; padding: 0; transform: translate(-50%, -50%); animation: none;
+  border: 0; border-radius: 50%; background: none; box-shadow: none; text-shadow: none; color: transparent; font-size: 1rem; transition: background 0.15s, box-shadow 0.15s;
+}
+.slab .key:nth-child(3n + 1) { left: 20.5%; } .slab .key:nth-child(3n + 2) { left: 49.9%; } .slab .key:nth-child(3n) { left: 78.2%; }
+.slab .key:nth-child(-n + 3) { top: 24.3%; } .slab .key:nth-child(n + 4):nth-child(-n + 6) { top: 44.5%; }
+.slab .key:nth-child(n + 7):nth-child(-n + 9) { top: 63.8%; } .slab .key:nth-child(n + 10) { top: 83.5%; }
+.slab .key.util, .slab .key.go { width: 26%; height: 12.5%; border-radius: 12px; }
+.slab .key:hover:not(:disabled) { background: radial-gradient(ellipse, rgba(200, 150, 255, 0.28), transparent 70%); }
+.slab .key:active:not(:disabled) { transform: translate(-50%, -48%); background: radial-gradient(ellipse, rgba(220, 180, 255, 0.5), transparent 72%); }
+.slab .key.zap { animation: runeflash 0.6s ease-out; }
+.slab .key.zap::after { border-color: #c79bff; box-shadow: 0 0 16px #b985ff, inset 0 0 12px #b985ff; }
+@keyframes runeflash { 0% { background: radial-gradient(ellipse, rgba(230, 190, 255, 0.9), transparent 70%); } 100% { background: radial-gradient(ellipse, rgba(200, 150, 255, 0), transparent 70%); } }
+.slab .key:focus-visible { outline: 3px solid var(--gold); }
+
+#viewCast .done-card .cast-title { color: var(--gold); }
+@media (prefers-reduced-motion: reduce) { .q::before, .q::after { animation: none; } }
